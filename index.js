@@ -4,8 +4,6 @@ exports.handler = async (event, context, callback) => {
   let result = null;
   let browser = null;
 
-  console.log(context);
-
   try {
     browser = await chromium.puppeteer.launch({
       args: chromium.args,
