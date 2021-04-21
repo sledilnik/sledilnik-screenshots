@@ -87,7 +87,7 @@ exports.handler = async (event, context, callback) => {
     formData.append('file1', image);
 
     result = {
-      statusCode: 200,
+      method: 'POST',
       headers: {
         // 'Content-Type': 'image/png',
         'Content-Type': 'multipart/form-data',
