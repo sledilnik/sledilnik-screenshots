@@ -75,7 +75,7 @@ exports.handler = async (event, context, callback) => {
       return { message: "Wrong selector or it's not visible" };
     }
 
-    image = await element.screenshot({ type: 'png' });
+    image = await element.screenshot({ type: 'png', encoding: 'base64' });
     console.log('Made screenshot');
 
     const filename = `${new Date()
@@ -89,17 +89,10 @@ exports.handler = async (event, context, callback) => {
     result = {
       method: 'POST',
       headers: {
-        // 'Content-Type': 'image/png',
         'Content-Type': 'multipart/form-data',
         'Content-Disposition': `form-data; name="file1"; filename="${filename}"`,
-        // 'Access-Control-Allow-Headers':
-        //   'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
-        // 'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
-        // 'Access-Control-Allow-Origin': '*',
-        // 'X-Requested-With': '*',
       },
-      // body: image.toString('base64'),
-      // isBase64Encoded: true,
+
       body: formData,
     };
   } catch (error) {
