@@ -1,4 +1,5 @@
 const chromium = require('chrome-aws-lambda');
+var FormData = require('form-data');
 const screenshots = require('./screenshots');
 
 exports.handler = async (event, context, callback) => {
