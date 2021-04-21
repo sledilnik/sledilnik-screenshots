@@ -92,6 +92,11 @@ exports.handler = async (event, context, callback) => {
         // 'Content-Type': 'image/png',
         'Content-Type': 'multipart/form-data',
         'Content-Disposition': `form-data; name="file1"; filename="${filename}"`,
+        'Access-Control-Allow-Headers':
+          'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+        'Access-Control-Allow-Methods': 'OPTIONS,POST',
+        'Access-Control-Allow-Origin': '*',
+        'X-Requested-With': '*',
       },
       // body: image.toString('base64'),
       // isBase64Encoded: true,
