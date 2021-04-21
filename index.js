@@ -6,13 +6,13 @@ exports.handler = async (event, context, callback) => {
     return callback(undefined, 'No target');
   }
 
-  const { type: _type, screen: chosenScreen } = event.queryStringParameters;
+  const { type: _type, screen: chosenScreenshot } = event.queryStringParameters;
   const type = _type.toUpperCase();
 
   if (!type || !chosenScreen) {
     return callback(
       undefined,
-      `Missing query parameters: type = ${type}, screen = ${chosenScreen}`
+      `Missing query parameters: type = ${type}, screen = ${chosenScreenshot}`
     );
   }
 
