@@ -1,4 +1,5 @@
 const chromium = require('chrome-aws-lambda');
+const screenshots = require('./screenshots');
 
 exports.handler = async (event, context, callback) => {
   if (!event.queryStringParameters) {
