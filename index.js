@@ -14,10 +14,12 @@ exports.handler = async (event, context, callback) => {
     });
     console.log('Browser launched');
 
-    let page = await browser.newPage({ waitUntil: 'networkidle0' });
+    let page = await browser.newPage();
     console.log('Made page.');
 
-    await page.goto(event.url || 'https://example.com');
+    await page.goto(event.url || 'https://example.com', {
+      waitUntil: 'networkidle0',
+    });
     console.log('Navigated to page');
 
     result = await page.title();
