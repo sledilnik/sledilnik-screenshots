@@ -94,7 +94,7 @@ exports.handler = async (event, context, callback) => {
         'Content-Disposition': `form-data; name="file1"; filename="${filename}"`,
         'Access-Control-Allow-Headers':
           'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
-        'Access-Control-Allow-Methods': 'OPTIONS,POST',
+        'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
         'Access-Control-Allow-Origin': '*',
         'X-Requested-With': '*',
       },
