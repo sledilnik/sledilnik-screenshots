@@ -90,6 +90,7 @@ exports.handler = async (event, context, callback) => {
       statusCode: 200,
       headers: {
         // 'Content-Type': 'image/png',
+        'Content-Type': 'multipart/form-data',
         'Content-Disposition': `form-data; name="file1"; filename="${filename}"`,
       },
       // body: image.toString('base64'),
