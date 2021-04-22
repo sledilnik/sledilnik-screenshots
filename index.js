@@ -87,7 +87,6 @@ exports.handler = async (event, context, callback) => {
     formData.append('file1', image);
 
     result = {
-      method: 'POST',
       headers: {
         'Content-Type': 'multipart/form-data',
         'Content-Disposition': `form-data; name="file1"; filename="${filename}"`,
