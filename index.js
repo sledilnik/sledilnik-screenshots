@@ -83,16 +83,13 @@ exports.handler = async (event, context, callback) => {
       .slice(0, 10)}---${chosenScreenshot}.png`;
     console.log('Filename is ', filename);
 
-    const formData = new FormData();
-    formData.append('file1', image);
-
     result = {
       headers: {
-        'Content-Type': 'multipart/form-data',
-        'Content-Disposition': `form-data; name="file1"; filename="${filename}"`,
+        'Content-Type': 'image/png',
       },
 
-      body: formData,
+      body: image,
+      isBase64Encoded: true,
     };
   } catch (error) {
     return callback(error);
