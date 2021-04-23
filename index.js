@@ -105,7 +105,7 @@ module.exports.handler = async (event, context, callback) => {
 
       for (let cardName of selectorsToRemove) {
         const _selectorToRemove = screenshot.getSelector(cardName);
-        const error = await removeChild(page, selectorToRemove);
+        const error = await removeChild(page, _selectorToRemove);
         if (error instanceof Error) {
           return callback(undefined, error.message);
         }
