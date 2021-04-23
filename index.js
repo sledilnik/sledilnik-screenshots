@@ -112,8 +112,8 @@ module.exports.handler = async (event, context, callback) => {
     console.log('Made screenshot');
 
     const chartName = customChartName
-      ? chosenScreenshot + '_' + customChartName
-      : chosenScreenshot;
+      ? screenshot.name + '_' + customChartName
+      : screenshot.name;
 
     const filename = `${new Date()
       .toISOString()
