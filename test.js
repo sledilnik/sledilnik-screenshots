@@ -84,7 +84,8 @@ const run = async (
       }
       await page.evaluate(sel => {
         const el = document.querySelector(sel);
-        el.style['margin-bottom'] = 'no';
+        el.style['margin'] = '0 0 0 0';
+        el.style.padding = '16px 16px 16px 16px';
         console.log(el.style);
       }, selector);
 
@@ -133,4 +134,4 @@ const run = async (
 };
 
 (async () =>
-  await run({ type: 'multicard', screen: 'HOS', custom: '' }, false))();
+  await run({ type: 'multicard', screen: 'ALL', custom: '' }, false))();

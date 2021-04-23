@@ -113,8 +113,8 @@ module.exports.handler = async (event, context, callback) => {
       }
       await page.evaluate(sel => {
         const el = document.querySelector(sel);
-        el.style['margin-bottom'] = 'no';
-        console.log(el.style);
+        el.style['margin'] = '0 0 0 0';
+        el.style.padding = '16px 16px 16px 16px';
       }, selector);
 
       const maxWidth = 4 * 325;
