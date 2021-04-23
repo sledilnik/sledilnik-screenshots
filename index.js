@@ -1,15 +1,20 @@
 const chromium = require('chrome-aws-lambda');
-var FormData = require('form-data');
 const screenshots = require('./screenshots');
+const navigateToCustomChart = require('./navigateToCustomChart');
 
-exports.handler = async (event, context, callback) => {
+module.exports.handler = async (event, context, callback) => {
   if (!event.queryStringParameters) {
     return callback(undefined, 'No target');
   }
 
-  const { type: _type, screen: chosenScreenshot } = event.queryStringParameters;
+  const {
+    type: _type,
+    screen: chosenScreenshot,
+    custom: customChartName,
+  } = event.queryStringParameters;
   const type = _type.toUpperCase();
 
+  // must have query params
   if (!type || !chosenScreenshot) {
     return callback(
       undefined,
@@ -17,15 +22,20 @@ exports.handler = async (event, context, callback) => {
     );
   }
 
-  if (!Object.keys(screenshots).includes(type)) {
-    throw new Error(`Invalid type: ${type}`);
+  // check if query param type is valid
+  const screenshotsKeys = Object.keys(screenshots.SCREENSHOTS);
+  if (!screenshotsKeys.includes(type)) {
+    throw new Error(
+      `Invalid type: ${type}; Possible types: ${screenshotsKeys}`
+    );
   }
 
   const options = screenshots.OPTIONS[type];
 
   const { viewport, getSelector, getUrl, selectorToRemove } = options;
-  const possibleScreenshots = screenshots[type];
+  const possibleScreenshots = screenshots.SCREENSHOTS[type];
 
+  // check if query param screen is valid
   if (
     !possibleScreenshots ||
     !Object.keys(possibleScreenshots).includes(chosenScreenshot)
@@ -75,12 +85,26 @@ exports.handler = async (event, context, callback) => {
       return { message: "Wrong selector or it's not visible" };
     }
 
+    if (customChartName) {
+      await navigateToCustomChart({
+        page,
+        element,
+        screenshot,
+        chosenScreenshot,
+        customChartName,
+      });
+    }
+
     image = await element.screenshot({ type: 'png', encoding: 'base64' });
     console.log('Made screenshot');
 
+    const chartName = customChartName
+      ? chosenScreenshot + '_' + customChartName
+      : chosenScreenshot;
+
     const filename = `${new Date()
       .toISOString()
-      .slice(0, 10)}---${chosenScreenshot}.png`;
+      .slice(0, 10)}---${chartName}.png`;
     console.log('Filename is ', filename);
 
     result = {
