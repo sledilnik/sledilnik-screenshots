@@ -83,7 +83,7 @@ MULTICARD = {
     include: [CARD.testsToday, CARD.testsTodayHAT, CARD.casesActive],
   },
   HOS: {
-    name: 'LAB',
+    name: 'HOS',
     getSelector: type => `.cardtype-${type} > .hp-card`,
     include: [CARD.hospitalizedCurrent, CARD.icuCurrent, CARD.deceasedToDate],
   },
