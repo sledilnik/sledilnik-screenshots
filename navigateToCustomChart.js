@@ -7,7 +7,7 @@ module.exports = async ({
 }) => {
   const stepsToReproduce = screenshot.customChart[customChartName];
   if (!stepsToReproduce) {
-    throw new Error(
+    return new Error(
       `No custom ${customChartName} chart for chart: ${chosenScreenshot}`
     );
   }
