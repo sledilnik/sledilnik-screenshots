@@ -79,17 +79,17 @@ CARD = {
 MULTICARD = {
   LAB: {
     name: 'LAB',
-    getSelector: type => `.cardtype-${type} > .hp-card`,
+    getSelector: type => `.cardtype-${type}`,
     include: [CARD.testsToday, CARD.testsTodayHAT, CARD.casesActive],
   },
   HOS: {
     name: 'HOS',
-    getSelector: type => `.cardtype-${type} > .hp-card`,
+    getSelector: type => `.cardtype-${type}`,
     include: [CARD.hospitalizedCurrent, CARD.icuCurrent, CARD.deceasedToDate],
   },
   ALL: {
     name: 'ALL_CARDS',
-    getSelector: type => `.cardtype-${type} > .hp-card`,
+    getSelector: type => `.cardtype-${type}`,
     include: Object.values(CARD),
   },
 };
