@@ -66,6 +66,37 @@ const run = async (
       return { message: "Wrong selector or it's not visible" };
     }
 
+    if (screenshot.include) {
+      const selectorsIncluded = screenshot.include.map(item => {
+        return item.name;
+      });
+      const selectorsToRemove = Object.keys(
+        screenshots.SCREENSHOTS.CARD
+      ).filter(item => !selectorsIncluded.includes(item));
+
+      for (let cardName of selectorsToRemove) {
+        const _selectorToRemove = screenshot.getSelector(cardName);
+        const error = removeChild(page, _selectorToRemove);
+        if (error instanceof Error) {
+          throw error;
+        }
+        console.log(`Selector: ${_selectorToRemove} removed`);
+      }
+      await page.evaluate(sel => {
+        const el = document.querySelector(sel);
+        el.style['margin-bottom'] = 'no';
+        console.log(el.style);
+      }, selector);
+
+      const maxWidth = 4 * 325;
+      const newWidth = selectorsIncluded.length * 325;
+
+      await page.setViewport({
+        width: maxWidth > newWidth ? newWidth : maxWidth,
+        height: viewport.height,
+      });
+    }
+
     if (customChartName) {
       await navigateToCustomChart({
         page,
@@ -98,5 +129,4 @@ const run = async (
   return image;
 };
 
-(async () =>
-  await run({ type: 'chart', screen: 'Map', custom: 'weeklyGrowth' }, false))();
+(async () => await run({ type: 'multicard', screen: 'ALL' }, false))();

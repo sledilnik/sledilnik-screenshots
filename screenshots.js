@@ -76,6 +76,24 @@ CARD = {
   vaccinationSummary: { name: 'vaccinationSummary' },
 };
 
+MULTICARD = {
+  LAB: {
+    name: 'LAB',
+    getSelector: type => `.cardtype-${type} > .hp-card`,
+    include: [CARD.testsToday, CARD.testsTodayHAT, CARD.casesActive],
+  },
+  HOS: {
+    name: 'LAB',
+    getSelector: type => `.cardtype-${type} > .hp-card`,
+    include: [CARD.hospitalizedCurrent, CARD.icuCurrent, CARD.deceasedToDate],
+  },
+  ALL: {
+    name: 'ALL_CARDS',
+    getSelector: type => `.cardtype-${type} > .hp-card`,
+    include: Object.values(CARD),
+  },
+};
+
 OPTIONS = {
   CARD: {
     viewport: { width: 325, height: 800 },
@@ -88,6 +106,11 @@ OPTIONS = {
     getUrl: type => `${CHART_BASE_URL}${type}`,
     selectorToRemove: '.metrics-selectors',
   },
+  MULTICARD: {
+    viewport: { width: 1000, height: 800 },
+    getSelector: () => `.cards-wrapper`,
+    getUrl: () => CARD_BASE_URL,
+  },
 };
 
-module.exports = { OPTIONS, SCREENSHOTS: { CARD, CHART } };
+module.exports = { OPTIONS, SCREENSHOTS: { CARD, CHART, MULTICARD } };

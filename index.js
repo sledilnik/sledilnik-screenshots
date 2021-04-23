@@ -95,6 +95,37 @@ module.exports.handler = async (event, context, callback) => {
       return { message: "Wrong selector or it's not visible" };
     }
 
+    if (screenshot.include) {
+      const selectorsIncluded = screenshot.include.map(item => {
+        return item.name;
+      });
+      const selectorsToRemove = Object.keys(
+        screenshots.SCREENSHOTS.CARD
+      ).filter(item => !selectorsIncluded.includes(item));
+
+      for (let cardName of selectorsToRemove) {
+        const _selectorToRemove = screenshot.getSelector(cardName);
+        const error = await removeChild(page, selectorToRemove);
+        if (error instanceof Error) {
+          return callback(undefined, error.message);
+        }
+        console.log(`Elements with selector: ${_selectorToRemove} removed`);
+      }
+      await page.evaluate(sel => {
+        const el = document.querySelector(sel);
+        el.style['margin-bottom'] = 'no';
+        console.log(el.style);
+      }, selector);
+
+      const maxWidth = 4 * 325;
+      const newWidth = selectorsIncluded.length * 325;
+
+      await page.setViewport({
+        width: maxWidth > newWidth ? newWidth : maxWidth,
+        height: viewport.height,
+      });
+    }
+
     if (customChartName) {
       const error = await navigateToCustomChart({
         page,
