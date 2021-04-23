@@ -1,20 +1,26 @@
-const screenshots = require('./screenshots');
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 
-const run = async () => {
-  let browser, image;
-  const type = 'CHART';
-  const chosenScreenshot = 'IcuPatients';
+const screenshots = require('./screenshots');
+const navigateToCustomChart = require('./navigateToCustomChart');
 
-  if (!Object.keys(screenshots).includes(type)) {
+const run = async (
+  params = { type: '', screen: '', custom: '' },
+  headless = true
+) => {
+  let browser, image;
+  const type = params.type.toUpperCase();
+  const chosenScreenshot = params.screen;
+  const customChartName = params.custom;
+
+  if (!Object.keys(screenshots.SCREENSHOTS).includes(type)) {
     throw new Error(`Invalid type: ${type}`);
   }
 
   const options = screenshots.OPTIONS[type];
 
   const { viewport, getSelector, getUrl, selectorToRemove } = options;
-  const possibleScreenshots = screenshots[type];
+  const possibleScreenshots = screenshots.SCREENSHOTS[type];
 
   if (
     !possibleScreenshots ||
@@ -30,7 +36,7 @@ const run = async () => {
 
   try {
     const browser = await puppeteer.launch({
-      headless: true,
+      headless,
       ignoreHTTPSErrors: true,
     });
 
@@ -58,12 +64,26 @@ const run = async () => {
       return { message: "Wrong selector or it's not visible" };
     }
 
+    if (customChartName) {
+      await navigateToCustomChart({
+        page,
+        element,
+        screenshot,
+        chosenScreenshot,
+        customChartName,
+      });
+    }
+
     image = await element.screenshot({ type: 'png' });
     console.log('Made screenshot');
 
+    const chartName = customChartName
+      ? chosenScreenshot + '_' + customChartName
+      : chosenScreenshot;
+
     const filename = `${new Date()
       .toISOString()
-      .slice(0, 10)}---${chosenScreenshot}.png`;
+      .slice(0, 10)}---${chartName}.png`;
     console.log('Filename is ', filename);
 
     fs.writeFileSync(`images/${filename}`, image);
@@ -76,4 +96,5 @@ const run = async () => {
   return image;
 };
 
-(async () => await run())();
+(async () =>
+  await run({ type: 'chart', screen: 'Map', custom: 'weeklyGrowth' }, false))();
