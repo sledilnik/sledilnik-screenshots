@@ -48,6 +48,11 @@ CHART = {
   },
   Map: {
     name: 'Map',
+    customChart: {
+      weeklyGrowth: [
+        ['display', 0, async elementHandle => await elementHandle.click()],
+      ],
+    },
   },
   Municipalities: {
     name: 'Municipalities',
