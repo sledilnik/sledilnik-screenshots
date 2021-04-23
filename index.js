@@ -2,6 +2,33 @@ const chromium = require('chrome-aws-lambda');
 const screenshots = require('./screenshots');
 const navigateToCustomChart = require('./navigateToCustomChart');
 
+const checkQueryParams = (type, chosenScreenshot) => {
+  // must have query params
+  if (!type || !chosenScreenshot) {
+    return new Error(
+      `Missing query parameters: type = ${type}, screen = ${chosenScreenshot}`
+    );
+  }
+
+  // check if query param type is valid
+  const screenshotsKeys = Object.keys(screenshots.SCREENSHOTS);
+  if (!screenshotsKeys.includes(type)) {
+    return new Error(
+      `Invalid type: ${type}; Possible types: ${screenshotsKeys}`
+    );
+  }
+
+  const possibleScreenshots = screenshots.SCREENSHOTS[type];
+
+  // check if query param screen is valid
+  if (
+    !possibleScreenshots ||
+    !Object.keys(possibleScreenshots).includes(chosenScreenshot)
+  ) {
+    return new Error(`Invalid chosen screenshot: ${chosenScreenshot}`);
+  }
+};
+
 module.exports.handler = async (event, context, callback) => {
   if (!event.queryStringParameters) {
     return callback(undefined, 'No target');
@@ -14,35 +41,18 @@ module.exports.handler = async (event, context, callback) => {
   } = event.queryStringParameters;
   const type = _type.toUpperCase();
 
-  // must have query params
-  if (!type || !chosenScreenshot) {
-    return callback(
-      undefined,
-      `Missing query parameters: type = ${type}, screen = ${chosenScreenshot}`
-    );
+  const error = checkQueryParams(type, chosenScreenshot);
+  if (error instanceof Error) {
+    return callback(undefined, error.message);
   }
 
-  // check if query param type is valid
-  const screenshotsKeys = Object.keys(screenshots.SCREENSHOTS);
-  if (!screenshotsKeys.includes(type)) {
-    throw new Error(
-      `Invalid type: ${type}; Possible types: ${screenshotsKeys}`
-    );
-  }
-
-  const options = screenshots.OPTIONS[type];
-
-  const { viewport, getSelector, getUrl, selectorToRemove } = options;
+  const {
+    viewport,
+    getSelector,
+    getUrl,
+    selectorToRemove,
+  } = screenshots.OPTIONS[type];
   const possibleScreenshots = screenshots.SCREENSHOTS[type];
-
-  // check if query param screen is valid
-  if (
-    !possibleScreenshots ||
-    !Object.keys(possibleScreenshots).includes(chosenScreenshot)
-  ) {
-    throw new Error(`Invalid chosen screenshot: ${chosenScreenshot}`);
-  }
-
   const screenshot = possibleScreenshots[chosenScreenshot];
 
   const url = getUrl(screenshot.name);
@@ -86,13 +96,16 @@ module.exports.handler = async (event, context, callback) => {
     }
 
     if (customChartName) {
-      await navigateToCustomChart({
+      const error = await navigateToCustomChart({
         page,
         element,
         screenshot,
         chosenScreenshot,
         customChartName,
       });
+      if (error instanceof Error) {
+        return callback(undefined, error.message);
+      }
     }
 
     image = await element.screenshot({ type: 'png', encoding: 'base64' });
