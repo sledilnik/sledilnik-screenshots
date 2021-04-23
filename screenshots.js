@@ -85,4 +85,4 @@ OPTIONS = {
   },
 };
 
-module.exports = { OPTIONS, CARD, CHART };
+module.exports = { OPTIONS, SCREENSHOTS: { CARD, CHART } };
