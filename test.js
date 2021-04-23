@@ -98,13 +98,16 @@ const run = async (
     }
 
     if (customChartName) {
-      await navigateToCustomChart({
+      const error = await navigateToCustomChart({
         page,
         element,
         screenshot,
         chosenScreenshot,
         customChartName,
       });
+      if (error instanceof Error) {
+        throw error;
+      }
     }
 
     image = await element.screenshot({ type: 'png' });
@@ -121,7 +124,7 @@ const run = async (
 
     fs.writeFileSync(`images/${filename}`, image);
   } catch (error) {
-    throw new Error(error);
+    throw error;
   } finally {
     browser && (await browser.close());
     console.log('Browser closed');
@@ -129,4 +132,5 @@ const run = async (
   return image;
 };
 
-(async () => await run({ type: 'multicard', screen: 'ALL' }, false))();
+(async () =>
+  await run({ type: 'multicard', screen: 'HOS', custom: '' }, false))();
