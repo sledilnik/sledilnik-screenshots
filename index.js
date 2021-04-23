@@ -1,6 +1,8 @@
 const chromium = require('chrome-aws-lambda');
 const screenshots = require('./screenshots');
+
 const navigateToCustomChart = require('./navigateToCustomChart');
+const removeChild = require('./removeChild');
 
 const checkQueryParams = (type, chosenScreenshot) => {
   // must have query params
@@ -81,13 +83,11 @@ module.exports.handler = async (event, context, callback) => {
     console.log('Went to ', url);
 
     if (selectorToRemove) {
-      await page.evaluate(sel => {
-        const elements = document.querySelectorAll(sel);
-        for (let i = 0; i < elements.length; i++) {
-          elements[i].parentNode.removeChild(elements[i]);
-        }
-      }, selectorToRemove);
-      console.log('Selector removed');
+      const error = await removeChild(page, selectorToRemove);
+      if (error instanceof Error) {
+        return callback(undefined, error.message);
+      }
+      console.log(`Elements with selector: ${selectorToRemove} removed`);
     }
 
     const element = await page.$(selector);

@@ -3,6 +3,7 @@ const fs = require('fs');
 
 const screenshots = require('./screenshots');
 const navigateToCustomChart = require('./navigateToCustomChart');
+const removeChild = require('./removeChild');
 
 const run = async (
   params = { type: '', screen: '', custom: '' },
@@ -17,9 +18,12 @@ const run = async (
     throw new Error(`Invalid type: ${type}`);
   }
 
-  const options = screenshots.OPTIONS[type];
-
-  const { viewport, getSelector, getUrl, selectorToRemove } = options;
+  const {
+    viewport,
+    getSelector,
+    getUrl,
+    selectorToRemove,
+  } = screenshots.OPTIONS[type];
   const possibleScreenshots = screenshots.SCREENSHOTS[type];
 
   if (
@@ -50,12 +54,10 @@ const run = async (
     console.log('Went to ', url);
 
     if (selectorToRemove) {
-      await page.evaluate(sel => {
-        const elements = document.querySelectorAll(sel);
-        for (let i = 0; i < elements.length; i++) {
-          elements[i].parentNode.removeChild(elements[i]);
-        }
-      }, selectorToRemove);
+      const error = removeChild(page, selectorToRemove);
+      if (error instanceof Error) {
+        throw error;
+      }
       console.log('Selector removed');
     }
 
