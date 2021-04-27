@@ -1,137 +1,87 @@
-const puppeteer = require('puppeteer');
-const fs = require('fs');
+const path = require('path');
+const { writeFileSync, existsSync, mkdirSync } = require('fs');
+const { handler } = require('.');
 
-const screenshots = require('./screenshots');
-const navigateToCustomChart = require('./navigateToCustomChart');
-const removeChild = require('./removeChild');
-
-const run = async (
-  params = { type: '', screen: '', custom: '' },
-  headless = true
+const runTest = (
+  query = { type: '', screen: '', custom: '', hoverIndex: '' },
+  options = {
+    filePath: 'images/screenshot.png',
+    headless: true,
+  }
 ) => {
-  let browser, image;
-  const type = params.type.toUpperCase();
-  const chosenScreenshot = params.screen;
-  const customChartName = params.custom;
+  const { type, screen, custom, hoverIndex } = query;
 
-  if (!Object.keys(screenshots.SCREENSHOTS).includes(type)) {
-    throw new Error(`Invalid type: ${type}`);
-  }
+  const event = {
+    queryStringParameters: {
+      type: type.toUpperCase(),
+      screen,
+      custom,
+      hoverIndex,
+    },
+    headless: options.headless,
+  };
 
-  const {
-    viewport,
-    getSelector,
-    getUrl,
-    selectorToRemove,
-  } = screenshots.OPTIONS[type];
-  const possibleScreenshots = screenshots.SCREENSHOTS[type];
+  const ensureDirectoryExistence = filePath => {
+    var dirname = path.dirname(filePath);
+    if (existsSync(dirname)) {
+      return true;
+    }
+    ensureDirectoryExistence(dirname);
+    mkdirSync(dirname);
+  };
 
-  if (
-    !possibleScreenshots ||
-    !Object.keys(possibleScreenshots).includes(chosenScreenshot)
-  ) {
-    throw new Error(`Invalid chosen screenshot: ${chosenScreenshot}`);
-  }
-
-  const screenshot = possibleScreenshots[chosenScreenshot];
-
-  const url = getUrl(screenshot.name);
-  const selector = getSelector(screenshot.name);
-
-  try {
-    const browser = await puppeteer.launch({
-      headless,
-      ignoreHTTPSErrors: true,
-    });
-
-    const page = await browser.newPage();
-    console.log('Made Page');
-
-    await page.setViewport(viewport);
-    console.log('Set viewport');
-
-    await page.goto(url, { waitUntil: 'networkidle0' });
-    console.log('Went to ', url);
-
-    if (selectorToRemove) {
-      const error = removeChild(page, selectorToRemove);
-      if (error instanceof Error) {
-        throw error;
-      }
-      console.log('Selector removed');
+  const callback = (error, result) => {
+    if (error) {
+      console.log(error);
+      return error;
+    }
+    const base64Data = result.body;
+    if (!base64Data) {
+      return new Error(result);
     }
 
-    const element = await page.$(selector);
-    if (!element) {
-      return { message: "Wrong selector or it's not visible" };
+    ensureDirectoryExistence(filePath);
+    try {
+      writeFileSync(`${filePath}`, base64Data, 'base64');
+    } catch (error) {
+      console.log(error);
     }
+    console.log(`File saved to: ${filePath}`);
+  };
 
-    if (screenshot.include) {
-      const selectorsIncluded = screenshot.include.map(item => {
-        return item.name;
-      });
-      const selectorsToRemove = Object.keys(
-        screenshots.SCREENSHOTS.CARD
-      ).filter(item => !selectorsIncluded.includes(item));
-
-      for (let cardName of selectorsToRemove) {
-        const _selectorToRemove = screenshot.getSelector(cardName);
-        const error = removeChild(page, _selectorToRemove);
-        if (error instanceof Error) {
-          throw error;
-        }
-        console.log(`Selector: ${_selectorToRemove} removed`);
-      }
-      await page.evaluate(sel => {
-        const el = document.querySelector(sel);
-        el.style['margin'] = '0 0 0 0';
-        el.style.padding = '16px 16px 16px 16px';
-        console.log(el.style);
-      }, selector);
-
-      const maxWidth = 4 * 325;
-      const newWidth = selectorsIncluded.length * 325;
-
-      await page.setViewport({
-        width: maxWidth > newWidth ? newWidth : maxWidth,
-        height: viewport.height,
-      });
-    }
-
-    if (customChartName) {
-      const error = await navigateToCustomChart({
-        page,
-        element,
-        screenshot,
-        chosenScreenshot,
-        customChartName,
-      });
-      if (error instanceof Error) {
-        throw error;
-      }
-    }
-
-    image = await element.screenshot({ type: 'png' });
-    console.log('Made screenshot');
-
-    const chartName = customChartName
-      ? screenshot.name + '_' + customChartName
-      : screenshot.name;
-
-    const filename = `${new Date()
-      .toISOString()
-      .slice(0, 10)}---${chartName}.png`;
-    console.log('Filename is ', filename);
-
-    fs.writeFileSync(`images/${filename}`, image);
-  } catch (error) {
-    throw error;
-  } finally {
-    browser && (await browser.close());
-    console.log('Browser closed');
-  }
-  return image;
+  (async () => await handler(event, null, callback))();
 };
 
-(async () =>
-  await run({ type: 'multicard', screen: 'ALL', custom: '' }, false))();
+// type = "card" || "chart" || "multicard"
+// screen -> see screenshots.js CARD || CHART || MULTICARD properties
+// custom -> see CHART[name].customChart
+
+const query = {
+  type: 'multicard',
+  screen: 'LAB',
+  custom: '',
+  hoverIndex: '',
+};
+
+const dateTime = new Date();
+const time = dateTime.toISOString().slice(11, 19).split(':').join('_');
+const date = dateTime.toISOString().slice(0, 10);
+let filename = query.custom ? `${query.screen}_${query.custom}` : query.screen;
+filename = query.hoverIndex ? `${filename}_${query.hoverIndex}` : filename;
+filename += `_${time}.png`;
+
+const defaultFolder = 'images';
+const filePath = path.resolve(
+  defaultFolder,
+  date,
+  query.type.toLocaleLowerCase(),
+  filename
+);
+
+const headless = true; // puppeteer launch browser mode
+const options = {
+  filePath,
+  headless,
+};
+
+runTest(query, options);
