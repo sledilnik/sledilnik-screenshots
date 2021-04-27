@@ -3,6 +3,7 @@ const path = require('path');
 CHART_BASE_URL = 'https://covid-19.sledilnik.org/embed.html#/chart/';
 CARD_BASE_URL = 'https://covid-19.sledilnik.org/';
 
+const elementHandleClick = async elementHandle => await elementHandle.click();
 CHART = {
   IcuPatients: {
     name: 'IcuPatients',
@@ -49,8 +50,14 @@ CHART = {
   Map: {
     name: 'Map',
     customChart: {
-      weeklyGrowth: [
-        ['display', 0, async elementHandle => await elementHandle.click()],
+      weeklyGrowth: [['display', 0, elementHandleClick]],
+      absolute1Day: [
+        ['display', 1, elementHandleClick],
+        ['interval', 0, elementHandleClick],
+      ],
+      distribution1Day: [
+        ['display', 3, elementHandleClick],
+        ['interval', 0, elementHandleClick],
       ],
     },
   },
