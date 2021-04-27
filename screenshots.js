@@ -14,6 +14,9 @@ CHART = {
   MetricsComparison: {
     name: 'MetricsComparison',
   },
+  DailyComparison: {
+    name: 'DailyComparison',
+  },
   EuropeMap: {
     name: 'EuropeMap',
   },
