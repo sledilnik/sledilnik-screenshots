@@ -105,6 +105,17 @@ OPTIONS = {
     getSelector: () => '.visualization.container.embeded > section',
     getUrl: type => `${CHART_BASE_URL}${type}`,
     selectorToRemove: '.metrics-selectors',
+    getButtons: async element => ({
+      interval: await element.$$(
+        '.chart-data-interval-selector > .chart-display-property-selector__item'
+      ),
+      display: await element.$$(
+        '.chart-display-property-selector > .chart-display-property-selector__item'
+      ),
+      highchartsSeries0Rect: await element.$$(
+        '.highcharts-root > g.highcharts-series-group > .highcharts-series-0 > rect'
+      ),
+    }),
   },
   MULTICARD: {
     viewport: { width: 1000, height: 800 },
