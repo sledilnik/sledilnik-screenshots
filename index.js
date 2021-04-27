@@ -1,35 +1,10 @@
 const chromium = require('chrome-aws-lambda');
-const screenshots = require('./screenshots');
 
+const screenshots = require('./screenshots');
 const navigateToCustomChart = require('./navigateToCustomChart');
 const removeChild = require('./removeChild');
-
-const checkQueryParams = (type, chosenScreenshot) => {
-  // must have query params
-  if (!type || !chosenScreenshot) {
-    return new Error(
-      `Missing query parameters: type = ${type}, screen = ${chosenScreenshot}`
-    );
-  }
-
-  // check if query param type is valid
-  const screenshotsKeys = Object.keys(screenshots.SCREENSHOTS);
-  if (!screenshotsKeys.includes(type)) {
-    return new Error(
-      `Invalid type: ${type}; Possible types: ${screenshotsKeys}`
-    );
-  }
-
-  const possibleScreenshots = screenshots.SCREENSHOTS[type];
-
-  // check if query param screen is valid
-  if (
-    !possibleScreenshots ||
-    !Object.keys(possibleScreenshots).includes(chosenScreenshot)
-  ) {
-    return new Error(`Invalid chosen screenshot: ${chosenScreenshot}`);
-  }
-};
+const validateQueryStringParameters = require('./validateQueryStringParameters');
+const removeUnwantedCards = require('./removeUnwantedCards.js');
 
 module.exports.handler = async (event, context, callback) => {
   if (!event.queryStringParameters) {
@@ -40,11 +15,18 @@ module.exports.handler = async (event, context, callback) => {
     type: _type,
     screen: chosenScreenshot,
     custom: customChartName,
+    hoverIndex,
   } = event.queryStringParameters;
   const type = _type.toUpperCase();
 
-  const error = checkQueryParams(type, chosenScreenshot);
+  const error = validateQueryStringParameters(
+    type,
+    chosenScreenshot,
+    customChartName,
+    hoverIndex
+  );
   if (error instanceof Error) {
+    console.log('ERROR msg: ', error.message);
     return callback(undefined, error.message);
   }
 
@@ -68,7 +50,7 @@ module.exports.handler = async (event, context, callback) => {
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
       executablePath: await chromium.executablePath,
-      headless: chromium.headless,
+      headless: event.headless || chromium.headless,
       ignoreHTTPSErrors: true,
     });
     console.log('Browser launched');
@@ -82,48 +64,24 @@ module.exports.handler = async (event, context, callback) => {
     await page.goto(url, { waitUntil: 'networkidle0' });
     console.log('Went to ', url);
 
-    if (selectorToRemove) {
-      const error = await removeChild(page, selectorToRemove);
-      if (error instanceof Error) {
-        return callback(undefined, error.message);
-      }
-      console.log(`Elements with selector: ${selectorToRemove} removed`);
-    }
-
     const element = await page.$(selector);
     if (!element) {
-      return { message: "Wrong selector or it's not visible" };
+      return callback(undefined, "Wrong selector or it's not visible");
     }
 
+    // multicard
     if (screenshot.include) {
-      const selectorsIncluded = screenshot.include.map(item => {
-        return item.name;
+      const error = await removeUnwantedCards({
+        page,
+        screenshots,
+        screenshot,
+        selector,
+        viewport,
       });
-      const selectorsToRemove = Object.keys(
-        screenshots.SCREENSHOTS.CARD
-      ).filter(item => !selectorsIncluded.includes(item));
-
-      for (let cardName of selectorsToRemove) {
-        const _selectorToRemove = screenshot.getSelector(cardName);
-        const error = await removeChild(page, _selectorToRemove);
-        if (error instanceof Error) {
-          return callback(undefined, error.message);
-        }
-        console.log(`Elements with selector: ${_selectorToRemove} removed`);
+      if (error instanceof Error) {
+        console.log('Has ERROR');
+        return callback(undefined, error.message);
       }
-      await page.evaluate(sel => {
-        const el = document.querySelector(sel);
-        el.style['margin'] = '0 0 0 0';
-        el.style.padding = '16px 16px 16px 16px';
-      }, selector);
-
-      const maxWidth = 4 * 325;
-      const newWidth = selectorsIncluded.length * 325;
-
-      await page.setViewport({
-        width: maxWidth > newWidth ? newWidth : maxWidth,
-        height: viewport.height,
-      });
     }
 
     if (customChartName) {
@@ -133,23 +91,25 @@ module.exports.handler = async (event, context, callback) => {
         screenshot,
         chosenScreenshot,
         customChartName,
+        hoverIndex,
       });
       if (error instanceof Error) {
+        console.log('Has ERROR');
         return callback(undefined, error.message);
       }
     }
 
+    if (selectorToRemove) {
+      const error = await removeChild(page, selectorToRemove);
+      if (error instanceof Error) {
+        console.log('Has ERROR');
+        return callback(undefined, error.message);
+      }
+      console.log(`Elements with selector: ${selectorToRemove} removed`);
+    }
+
     image = await element.screenshot({ type: 'png', encoding: 'base64' });
     console.log('Made screenshot');
-
-    const chartName = customChartName
-      ? screenshot.name + '_' + customChartName
-      : screenshot.name;
-
-    const filename = `${new Date()
-      .toISOString()
-      .slice(0, 10)}---${chartName}.png`;
-    console.log('Filename is ', filename);
 
     result = {
       headers: {
@@ -163,9 +123,12 @@ module.exports.handler = async (event, context, callback) => {
     return callback(error);
   } finally {
     if (browser !== null) {
+      let pages = await browser.pages();
+      await Promise.all(pages.map(page => page.close()));
+      console.log('All pages closed');
       await browser.close();
+      console.log('Browser closed');
     }
   }
-
   return callback(null, result);
 };
