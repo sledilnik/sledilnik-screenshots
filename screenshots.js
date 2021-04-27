@@ -4,12 +4,28 @@ CHART_BASE_URL = 'https://covid-19.sledilnik.org/embed.html#/chart/';
 CARD_BASE_URL = 'https://covid-19.sledilnik.org/';
 
 const elementHandleClick = async elementHandle => await elementHandle.click();
+const castToNumber = index => +index;
+
+const testFunc = async elementHandle => {
+  elementHandle.click();
+};
+
 CHART = {
   IcuPatients: {
     name: 'IcuPatients',
+    customChart: {
+      twoMonthsTooltip: [
+        ['highchartsSeries0Rect', castToNumber, elementHandleClick],
+      ],
+    },
   },
   Patients: {
     name: 'Patients',
+    customChart: {
+      twoMonthsTooltip: [
+        ['highchartsSeries0Rect', castToNumber, elementHandleClick],
+      ],
+    },
   },
   MetricsComparison: {
     name: 'MetricsComparison',
