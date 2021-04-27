@@ -73,6 +73,9 @@ CHART = {
   AgeGroups: {
     name: 'AgeGroups',
   },
+  AgeGroupsTimeline: {
+    name: 'AgeGroupsTimeline',
+  },
 };
 
 CARD = {
