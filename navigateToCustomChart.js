@@ -16,6 +16,9 @@ module.exports = async ({
   }
 
   const buttons = await getButtons(element);
+  // for (let [key, value] of Object.entries(buttons)) {
+  //   console.log(key, value.length);
+  // }
 
   const evaluteFunc = el => {
     if (el.textContent) {
@@ -24,16 +27,42 @@ module.exports = async ({
     return el.nodeName;
   };
 
+  let returnedElement;
   for (item of stepsToReproduce) {
-    const [what, which, func, skipContent] = item;
-    const index = which instanceof Function ? which(hoverIndex) : which;
-    const button = buttons[what][index];
+    const [what, which, func, options] = item;
 
-    let text;
-    if (!skipContent) {
-      text = await page.evaluate(evaluteFunc, button);
-    }
-    button && (await func(button));
-    text && console.log(`Button "${text}" clicked`);
+    const performOnElement = async () => {
+      const index = which instanceof Function ? which(hoverIndex) : which;
+      const button = buttons[what][index];
+
+      let text;
+      if (!options?.skipContent) {
+        text = await page.evaluate(evaluteFunc, button);
+      }
+      let result;
+      if (button) {
+        result = await func(button);
+      }
+      text && console.log(`Button "${text}" clicked`);
+      return result;
+    };
+
+    const preformOnArrayOfElements = async () => {
+      const series = buttons[what];
+      const index = which instanceof Function ? which(hoverIndex) : which;
+
+      let result;
+      if (series) {
+        result = await func(series, index, options);
+        if (!options?.skipContent) {
+          text = await page.evaluate(evaluteFunc, result);
+        }
+        text && console.log(`Button "${text}" clicked`);
+      }
+      return result;
+    };
+
+    !options?.loop && (returnedElement = await performOnElement());
+    options?.loop && (returnedElement = await preformOnArrayOfElements());
   }
 };
