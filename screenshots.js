@@ -3,11 +3,21 @@ const path = require('path');
 CHART_BASE_URL = 'https://covid-19.sledilnik.org/embed.html#/chart/';
 CARD_BASE_URL = 'https://covid-19.sledilnik.org/';
 
-const elementHandleClick = async elementHandle => await elementHandle.click();
+const elementHandleClick = async elementHandle => {
+  await elementHandle.click();
+};
 const castToNumber = index => +index;
 
-const testFunc = async elementHandle => {
-  elementHandle.click();
+const loopAndShowTooltip = async (series, index, options) => {
+  const selectorsArray = await Promise.all(
+    series.map(async item => await item.$$(options.selector))
+  );
+  const filtered = selectorsArray.filter(
+    item => item.length === options.length
+  );
+
+  filtered.length > 0 && (await elementHandleClick(filtered[0][index]));
+  return filtered[0][index];
 };
 
 CHART = {
@@ -46,7 +56,7 @@ CHART = {
       ],
       sharePCRTooltip: [
         ['metrics', 3, elementHandleClick],
-        ['highchartsSeries', castToNumber, elementHandleClick],
+        ['highchartsSeriesRect', castToNumber, elementHandleClick],
       ],
     },
   },
@@ -108,6 +118,22 @@ CHART = {
   },
   AgeGroupsTimeline: {
     name: 'AgeGroupsTimeline',
+    customChart: {
+      twoMonthsNewCasesTooltip: [
+        [
+          'highchartsSeries',
+          castToNumber,
+          loopAndShowTooltip,
+          {
+            loop: true,
+            length: 60,
+            selector: 'rect',
+            exit: true,
+            func: elementHandleClick,
+          },
+        ],
+      ],
+    },
   },
 };
 
@@ -162,8 +188,17 @@ OPTIONS = {
         '.highcharts-root > g.highcharts-series-group > .highcharts-series-0 > rect'
       ),
       metrics: await element.$$('.metrics-selectors > .metric-selector'),
-      highchartsSeries: await element.$$(
+      highchartsSeriesRect: await element.$$(
         '.highcharts-root > g.highcharts-series-group > .highcharts-series > rect'
+      ),
+      highchartsSeriesGroup: await element.$$(
+        '.highcharts-root > g.highcharts-series-group'
+      ),
+      highchartsSeries: await element.$$(
+        '.highcharts-root > g.highcharts-series-group g.highcharts-series'
+      ),
+      highchartsSeriesColumn: await element.$$(
+        '.highcharts-root > g.highcharts-series-group .highcharts-column-series'
       ),
     }),
   },
