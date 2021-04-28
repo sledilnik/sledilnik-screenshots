@@ -32,6 +32,23 @@ CHART = {
   },
   DailyComparison: {
     name: 'DailyComparison',
+    customChart: {
+      casesConfirmedTooltip: [
+        ['highchartsSeries', castToNumber, elementHandleClick],
+      ],
+      casesActiveTooltip: [
+        ['metrics', 1, elementHandleClick],
+        ['highchartsSeries', castToNumber, elementHandleClick],
+      ],
+      performedPCRTooltip: [
+        ['metrics', 2, elementHandleClick],
+        ['highchartsSeries', castToNumber, elementHandleClick],
+      ],
+      sharePCRTooltip: [
+        ['metrics', 3, elementHandleClick],
+        ['highchartsSeries', castToNumber, elementHandleClick],
+      ],
+    },
   },
   EuropeMap: {
     name: 'EuropeMap',
@@ -143,6 +160,10 @@ OPTIONS = {
       ),
       highchartsSeries0Rect: await element.$$(
         '.highcharts-root > g.highcharts-series-group > .highcharts-series-0 > rect'
+      ),
+      metrics: await element.$$('.metrics-selectors > .metric-selector'),
+      highchartsSeries: await element.$$(
+        '.highcharts-root > g.highcharts-series-group > .highcharts-series > rect'
       ),
     }),
   },
