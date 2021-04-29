@@ -33,7 +33,10 @@ module.exports = async ({
 
     const performOnElement = async () => {
       const index = which instanceof Function ? which(hoverIndex) : which;
-      const button = buttons[what][index];
+      const series = buttons[what];
+      console.log(`Series length: ${series.length}. Index: ${index}`);
+
+      const button = series[index];
 
       let text;
       if (!options?.skipContent) {
@@ -50,6 +53,8 @@ module.exports = async ({
     const preformOnArrayOfElements = async () => {
       const series = buttons[what];
       const index = which instanceof Function ? which(hoverIndex) : which;
+
+      console.log(`Series length: ${series.length}. Index: ${index}`);
 
       let result;
       if (series) {
