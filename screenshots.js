@@ -44,15 +44,15 @@ CHART = {
     name: 'DailyComparison',
     customChart: {
       casesConfirmedTooltip: [
-        ['highchartsSeries', castToNumber, elementHandleClick],
+        ['highchartsSeriesRect', castToNumber, elementHandleClick],
       ],
       casesActiveTooltip: [
         ['metrics', 1, elementHandleClick],
-        ['highchartsSeries', castToNumber, elementHandleClick],
+        ['highchartsSeriesRect', castToNumber, elementHandleClick],
       ],
       performedPCRTooltip: [
         ['metrics', 2, elementHandleClick],
-        ['highchartsSeries', castToNumber, elementHandleClick],
+        ['highchartsSeriesRect', castToNumber, elementHandleClick],
       ],
       sharePCRTooltip: [
         ['metrics', 3, elementHandleClick],
