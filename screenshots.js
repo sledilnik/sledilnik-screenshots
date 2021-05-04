@@ -12,12 +12,25 @@ const loopAndShowTooltip = async (series, index, options) => {
   const selectorsArray = await Promise.all(
     series.map(async item => await item.$$(options.selector))
   );
-  const filtered = selectorsArray.filter(
-    item => item.length === options.length
-  );
+  const filtered = selectorsArray.filter(item => item.length > options.length);
 
-  filtered.length > 0 && (await elementHandleClick(filtered[0][index]));
-  return filtered[0][index];
+  if (filtered.length === 0) {
+    throw new Error(
+      `No filtered array. [series] length: ${
+        series.length
+      }, [index]: ${index}, [options]: ${options.toString()}`
+    );
+  }
+
+  const buttons = filtered[0];
+  if (buttons.length - 1 < index) {
+    throw new Error(
+      `Can not find index; array length: ${buttons.length}, [index]: ${index}`
+    );
+  }
+
+  await elementHandleClick(buttons[index]);
+  return buttons[index];
 };
 
 CHART = {
