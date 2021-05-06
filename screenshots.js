@@ -148,6 +148,33 @@ CHART = {
       ],
     },
   },
+  PhaseDiagram: {
+    name: 'PhaseDiagram',
+  },
+  Sources: {
+    name: 'Sources',
+  },
+  HcCases: {
+    name: 'HcCases',
+  },
+  ExcessDeaths: {
+    name: 'ExcessDeaths',
+  },
+  Deceased: {
+    name: 'Deceased',
+  },
+  MetricsCorrelation: {
+    name: 'MetricsCorrelation',
+  },
+  WeeklyDemographics: {
+    name: 'WeeklyDemographics',
+  },
+  Schools: {
+    name: 'Schools',
+  },
+  Sewage: {
+    name: 'Sewage',
+  },
 };
 
 CARD = {
