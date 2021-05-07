@@ -47,6 +47,7 @@ module.exports = async ({
         result = await func(button);
       }
       text && console.log(`Button "${text}" clicked`);
+      page.waitForTimeout(500);
       return result;
     };
 
