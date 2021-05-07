@@ -71,6 +71,30 @@ CHART = {
         ['metrics', 3, elementHandleClick],
         ['highchartsSeriesRect', castToNumber, elementHandleClick],
       ],
+      testsHATTooltip: [
+        ['metrics', 4, elementHandleClick],
+        ['highchartsSeriesRect', castToNumber, elementHandleClick],
+      ],
+      vaccinesUsedTooltip: [
+        ['metrics', 5, elementHandleClick],
+        ['highchartsSeriesRect', castToNumber, elementHandleClick],
+      ],
+      admittedHospitalsTooltip: [
+        ['metrics', 6, elementHandleClick],
+        ['highchartsSeriesRect', castToNumber, elementHandleClick],
+      ],
+      dischargedHospitalsTooltip: [
+        ['metrics', 7, elementHandleClick],
+        ['highchartsSeriesRect', castToNumber, elementHandleClick],
+      ],
+      admittedICUTooltip: [
+        ['metrics', 8, elementHandleClick],
+        ['highchartsSeriesRect', castToNumber, elementHandleClick],
+      ],
+      deceasedTooltip: [
+        ['metrics', 9, elementHandleClick],
+        ['highchartsSeriesRect', castToNumber, elementHandleClick],
+      ],
     },
   },
   EuropeMap: {
