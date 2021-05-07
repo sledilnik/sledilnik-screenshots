@@ -108,7 +108,7 @@ module.exports.handler = async (event, context, callback) => {
       console.log(`Elements with selector: ${selectorToRemove} removed`);
     }
 
-    page.waitForTimeout(500);
+    await page.waitForTimeout(500);
     image = await element.screenshot({ type: 'png', encoding: 'base64' });
     console.log('Made screenshot');
 
