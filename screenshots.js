@@ -34,22 +34,6 @@ const loopAndShowTooltip = async (series, index, options) => {
 };
 
 CHART = {
-  IcuPatients: {
-    name: 'IcuPatients',
-    customChart: {
-      twoMonthsTooltip: [
-        ['highchartsSeries0Rect', castToNumber, elementHandleClick],
-      ],
-    },
-  },
-  Patients: {
-    name: 'Patients',
-    customChart: {
-      twoMonthsTooltip: [
-        ['highchartsSeries0Rect', castToNumber, elementHandleClick],
-      ],
-    },
-  },
   MetricsComparison: {
     name: 'MetricsComparison',
   },
@@ -97,39 +81,13 @@ CHART = {
       ],
     },
   },
-  EuropeMap: {
-    name: 'EuropeMap',
-  },
-  WorldMap: {
-    name: 'WorldMap',
-  },
-  CarePatients: {
-    name: 'CarePatients',
-  },
-  Ratios: {
-    name: 'Ratios',
-  },
   Tests: {
     name: 'Tests',
   },
-  HCenters: {
-    name: 'HCenters',
+  Vaccination: {
+    name: 'Vaccination',
   },
-  Cases: {
-    name: 'Cases',
-  },
-  Spread: {
-    name: 'Spread',
-  },
-  Infections: {
-    name: 'Infections',
-  },
-  Regions: {
-    name: 'Regions',
-  },
-  RegionMap: {
-    name: 'RegionMap',
-  },
+  Regions100k: { name: 'Regions100k' },
   Map: {
     name: 'Map',
     customChart: {
@@ -147,11 +105,33 @@ CHART = {
   Municipalities: {
     name: 'Municipalities',
   },
+  Sewage: {
+    name: 'Sewage',
+  },
+  Schools: {
+    name: 'Schools',
+  },
   SchoolStatus: {
     name: 'SchoolStatus',
   },
-  AgeGroups: {
-    name: 'AgeGroups',
+  Patients: {
+    name: 'Patients',
+    customChart: {
+      twoMonthsTooltip: [
+        ['highchartsSeries0Rect', castToNumber, elementHandleClick],
+      ],
+    },
+  },
+  IcuPatients: {
+    name: 'IcuPatients',
+    customChart: {
+      twoMonthsTooltip: [
+        ['highchartsSeries0Rect', castToNumber, elementHandleClick],
+      ],
+    },
+  },
+  CarePatients: {
+    name: 'CarePatients',
   },
   AgeGroupsTimeline: {
     name: 'AgeGroupsTimeline',
@@ -172,32 +152,57 @@ CHART = {
       ],
     },
   },
-  PhaseDiagram: {
-    name: 'PhaseDiagram',
+  WeeklyDemographics: {
+    name: 'WeeklyDemographics',
   },
-  Sources: {
-    name: 'Sources',
-  },
-  HcCases: {
-    name: 'HcCases',
-  },
-  ExcessDeaths: {
-    name: 'ExcessDeaths',
-  },
-  Deceased: {
-    name: 'Deceased',
+  AgeGroups: {
+    name: 'AgeGroups',
   },
   MetricsCorrelation: {
     name: 'MetricsCorrelation',
   },
-  WeeklyDemographics: {
-    name: 'WeeklyDemographics',
+  Deceased: {
+    name: 'Deceased',
   },
-  Schools: {
-    name: 'Schools',
+  ExcessDeaths: {
+    name: 'ExcessDeaths',
   },
-  Sewage: {
-    name: 'Sewage',
+  Infections: {
+    name: 'Infections',
+  },
+  HcCases: {
+    name: 'HcCases',
+  },
+  EuropeMap: {
+    name: 'EuropeMap',
+  },
+  Sources: {
+    name: 'Sources',
+  },
+  Cases: {
+    name: 'Cases',
+  },
+  RegionMap: {
+    name: 'RegionMap',
+  },
+  Regions: {
+    name: 'Regions',
+  },
+  PhaseDiagram: {
+    name: 'PhaseDiagram',
+  },
+  Spread: {
+    name: 'Spread',
+  },
+  // Not on Covid-19 Sledilnik
+  WorldMap: {
+    name: 'WorldMap',
+  },
+  Ratios: {
+    name: 'Ratios',
+  },
+  HCenters: {
+    name: 'HCenters',
   },
 };
 
