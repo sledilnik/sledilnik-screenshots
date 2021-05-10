@@ -285,12 +285,13 @@ OPTIONS = {
     viewport: { width: 325, height: 800 },
     getSelector: type => `.cardtype-${type} > .hp-card`,
     getUrl: () => CARD_BASE_URL,
+    selectorsToRemove: [],
   },
   CHART: {
     viewport: { width: 1200, height: 800 },
     getSelector: () => '.visualization.container.embeded > section',
     getUrl: type => `${CHART_BASE_URL}${type}`,
-    selectorToRemove: '.metrics-selectors',
+    selectorsToRemove: ['.metrics-selectors'],
     getButtons: async element => ({
       filterSelect: await element.$$(
         '.chart-display-properties > .filters > select'
@@ -326,6 +327,7 @@ OPTIONS = {
     viewport: { width: 1000, height: 800 },
     getSelector: () => `.cards-wrapper`,
     getUrl: () => CARD_BASE_URL,
+    selectorsToRemove: [],
   },
 };
 

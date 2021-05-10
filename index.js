@@ -16,7 +16,14 @@ module.exports.handler = async (event, context, callback) => {
     screen: chosenScreenshot,
     custom: customChartName,
     hoverIndex,
-  } = event.queryStringParameters;
+    hideLegend,
+  } = event?.queryStringParameters || {
+    type: '',
+    screen: '',
+    custom: '',
+    hoverIndex: '',
+    hideLegend: '',
+  };
   const type = _type.toUpperCase();
 
   const error = validateQueryStringParameters(
@@ -34,7 +41,7 @@ module.exports.handler = async (event, context, callback) => {
     viewport,
     getSelector,
     getUrl,
-    selectorToRemove,
+    selectorsToRemove,
   } = screenshots.OPTIONS[type];
   const possibleScreenshots = screenshots.SCREENSHOTS[type];
   const screenshot = possibleScreenshots[chosenScreenshot];
@@ -99,13 +106,16 @@ module.exports.handler = async (event, context, callback) => {
       }
     }
 
-    if (selectorToRemove) {
-      const error = await removeChild(page, selectorToRemove);
-      if (error instanceof Error) {
-        console.log('Has ERROR');
-        return callback(undefined, error.message);
+    if (!!hideLegend) {
+      console.log('Legend will be removed!');
+      for (const selectorToRemove of selectorsToRemove) {
+        const error = await removeChild(page, selectorToRemove);
+        if (error instanceof Error) {
+          console.log('Has ERROR');
+          return callback(undefined, error.message);
+        }
       }
-      console.log(`Elements with selector: ${selectorToRemove} removed`);
+      console.log('Legend removed!');
     }
 
     await page.waitForTimeout(500);

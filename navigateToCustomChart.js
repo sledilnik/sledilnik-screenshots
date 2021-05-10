@@ -34,6 +34,9 @@ module.exports = async ({
     const performOnElement = async () => {
       const index = which instanceof Function ? which(hoverIndex) : which;
       const series = buttons[what];
+      if (!series) {
+        throw new Error(`No series for: ${what}`);
+      }
       console.log(`Series length: ${series.length}. Index: ${index}`);
 
       const button = series[index];
@@ -43,8 +46,9 @@ module.exports = async ({
         text = await page.evaluate(evaluteFunc, button);
       }
       let result;
+      const funcArgs = options?.funcArgs || [];
       if (button) {
-        result = await func(button);
+        result = await func(button, ...funcArgs);
       }
       text && console.log(`Button "${text}" clicked`);
       await page.waitForTimeout(500);
