@@ -124,7 +124,7 @@ CHART = {
       koroskaSortByLast: [
         ['filterSelect', 0, elementHandleSelect, { funcArgs: ['sg'] }],
       ],
-      obalnoKraaskaSortByLast: [
+      obalnoKraskaSortByLast: [
         ['filterSelect', 0, elementHandleSelect, { funcArgs: ['kp'] }],
       ],
       osrednjeSlovenskaSortByLast: [
