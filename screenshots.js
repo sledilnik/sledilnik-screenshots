@@ -6,6 +6,11 @@ CARD_BASE_URL = 'https://covid-19.sledilnik.org/';
 const elementHandleClick = async elementHandle => {
   await elementHandle.click();
 };
+
+const elementHandleSelect = async (elementHandle, value) => {
+  await elementHandle.select(value);
+};
+
 const castToNumber = index => +index;
 
 const loopAndShowTooltip = async (series, index, options) => {
