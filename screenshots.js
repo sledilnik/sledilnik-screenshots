@@ -247,6 +247,12 @@ OPTIONS = {
     getUrl: type => `${CHART_BASE_URL}${type}`,
     selectorToRemove: '.metrics-selectors',
     getButtons: async element => ({
+      filterSelect: await element.$$(
+        '.chart-display-properties > .filters > select'
+      ),
+      filterSelectOptions: await element.$$(
+        '.chart-display-properties > .filters > select > option'
+      ),
       interval: await element.$$(
         '.chart-data-interval-selector > .chart-display-property-selector__item'
       ),
