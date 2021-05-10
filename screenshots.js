@@ -148,7 +148,7 @@ CHART = {
         ],
         ['display', 2, elementHandleClick],
       ],
-      deceased7DayAvg: [
+      deceased: [
         [
           'filterSelect',
           0,
