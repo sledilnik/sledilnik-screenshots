@@ -106,7 +106,7 @@ module.exports.handler = async (event, context, callback) => {
       }
     }
 
-    if (!!hideLegend) {
+    if (hideLegend == String(true)) {
       console.log('Legend will be removed!');
       for (const selectorToRemove of selectorsToRemove) {
         const error = await removeChild(page, selectorToRemove);
