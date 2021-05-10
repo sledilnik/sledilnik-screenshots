@@ -92,7 +92,9 @@ CHART = {
   Vaccination: {
     name: 'Vaccination',
   },
-  Regions100k: { name: 'Regions100k' },
+  Regions100k: {
+    name: 'Regions100k',
+  },
   Map: {
     name: 'Map',
     customChart: {
@@ -109,6 +111,44 @@ CHART = {
   },
   Municipalities: {
     name: 'Municipalities',
+    customChart: {
+      gorenjskaSortByLast: [
+        ['filterSelect', 0, elementHandleSelect, { funcArgs: ['kr'] }],
+      ],
+      goriskaSortByLast: [
+        ['filterSelect', 0, elementHandleSelect, { funcArgs: ['ng'] }],
+      ],
+      jvSlovenijaSortByLast: [
+        ['filterSelect', 0, elementHandleSelect, { funcArgs: ['nm'] }],
+      ],
+      koroskaSortByLast: [
+        ['filterSelect', 0, elementHandleSelect, { funcArgs: ['sg'] }],
+      ],
+      obalnoKraaskaSortByLast: [
+        ['filterSelect', 0, elementHandleSelect, { funcArgs: ['kp'] }],
+      ],
+      osrednjeSlovenskaSortByLast: [
+        ['filterSelect', 0, elementHandleSelect, { funcArgs: ['lj'] }],
+      ],
+      podravskaSortByLast: [
+        ['filterSelect', 0, elementHandleSelect, { funcArgs: ['mb'] }],
+      ],
+      pomurskaSortByLast: [
+        ['filterSelect', 0, elementHandleSelect, { funcArgs: ['ms'] }],
+      ],
+      posavskaSortByLast: [
+        ['filterSelect', 0, elementHandleSelect, { funcArgs: ['kk'] }],
+      ],
+      primorskoNotranjskaSortByLast: [
+        ['filterSelect', 0, elementHandleSelect, { funcArgs: ['po'] }],
+      ],
+      savinjskaSortByLast: [
+        ['filterSelect', 0, elementHandleSelect, { funcArgs: ['ce'] }],
+      ],
+      zasavskaSortByLast: [
+        ['filterSelect', 0, elementHandleSelect, { funcArgs: ['za'] }],
+      ],
+    },
   },
   Sewage: {
     name: 'Sewage',
