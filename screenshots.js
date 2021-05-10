@@ -94,6 +94,69 @@ CHART = {
   },
   Regions100k: {
     name: 'Regions100k',
+    customChart: {
+      casesConfirmed7DayAvg: [
+        [
+          'filterSelect',
+          0,
+          elementHandleSelect,
+          { funcArgs: ['ViewConfirmed'] },
+        ],
+      ],
+      casesConfirmedActive: [
+        [
+          'filterSelect',
+          0,
+          elementHandleSelect,
+          { funcArgs: ['ViewConfirmed'] },
+        ],
+        ['display', 1, elementHandleClick],
+      ],
+      casesConfirmedAll: [
+        [
+          'filterSelect',
+          0,
+          elementHandleSelect,
+          { funcArgs: ['ViewConfirmed'] },
+        ],
+        ['display', 2, elementHandleClick],
+      ],
+      vaccinated7DayAvg: [
+        [
+          'filterSelect',
+          0,
+          elementHandleSelect,
+          { funcArgs: ['ViewVaccinated'] },
+        ],
+      ],
+
+      vaccinatedDose1: [
+        [
+          'filterSelect',
+          0,
+          elementHandleSelect,
+          { funcArgs: ['ViewVaccinated'] },
+        ],
+        ['display', 1, elementHandleClick],
+      ],
+      vaccinatedDose2: [
+        [
+          'filterSelect',
+          0,
+          elementHandleSelect,
+          { funcArgs: ['ViewVaccinated'] },
+        ],
+        ['display', 2, elementHandleClick],
+      ],
+      deceased7DayAvg: [
+        [
+          'filterSelect',
+          0,
+          elementHandleSelect,
+          { funcArgs: ['ViewDeceased'] },
+        ],
+      ],
+    },
   },
   Map: {
     name: 'Map',
