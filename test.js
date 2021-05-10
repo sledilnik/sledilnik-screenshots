@@ -3,13 +3,13 @@ const { writeFileSync, existsSync, mkdirSync } = require('fs');
 const { handler } = require('.');
 
 const runTest = (
-  query = { type: '', screen: '', custom: '', hoverIndex: '' },
+  query = { type: '', screen: '', custom: '', hoverIndex: '', hideLegend },
   options = {
     filePath: 'images/screenshot.png',
     headless: true,
   }
 ) => {
-  const { type, screen, custom, hoverIndex } = query;
+  const { type, screen, custom, hoverIndex, hideLegend } = query;
 
   const event = {
     queryStringParameters: {
@@ -17,6 +17,7 @@ const runTest = (
       screen,
       custom,
       hoverIndex,
+      hideLegend,
     },
     headless: options.headless,
   };
@@ -57,10 +58,11 @@ const runTest = (
 // custom -> see CHART[name].customChart
 
 const query = {
-  type: 'multicard',
-  screen: 'LAB',
-  custom: '',
+  type: 'multi',
+  screen: 'Municipalities',
+  custom: 'obalnoKraskaSortByLast',
   hoverIndex: '',
+  hideLegend: false,
 };
 
 const dateTime = new Date();
