@@ -181,25 +181,114 @@ CHART = {
     name: 'Map',
     customChart: {
       weeklyGrowth: [['display', 0, elementHandleClick]],
+      weeklyGrowthTooltip: [
+        ['display', 0, elementHandleClick],
+        [
+          'highchartsSeriesGFirstChild',
+          value => value,
+          findByNameShowTooltip,
+          {
+            loop: true,
+            getSelector: name => `.highcharts-name-${name}`,
+            exit: true,
+            func: elementHandleClick,
+          },
+        ],
+      ],
       absolute1Day: [
         ['display', 1, elementHandleClick],
         ['interval', 0, elementHandleClick],
+      ],
+      absolute1DayTooltip: [
+        ['display', 1, elementHandleClick],
+        ['interval', 0, elementHandleClick],
+        [
+          'highchartsSeriesGFirstChild',
+          value => value,
+          findByNameShowTooltip,
+          {
+            loop: true,
+            getSelector: name => `.highcharts-name-${name}`,
+            exit: true,
+            func: elementHandleClick,
+          },
+        ],
       ],
       absolute7Days: [
         ['display', 1, elementHandleClick],
         ['interval', 1, elementHandleClick],
       ],
+      absolute7DaysTooltip: [
+        ['display', 1, elementHandleClick],
+        ['interval', 1, elementHandleClick],
+        [
+          'highchartsSeriesGFirstChild',
+          value => value,
+          findByNameShowTooltip,
+          {
+            loop: true,
+            getSelector: name => `.highcharts-name-${name}`,
+            exit: true,
+            func: elementHandleClick,
+          },
+        ],
+      ],
       distribution1Day: [
         ['display', 3, elementHandleClick],
         ['interval', 0, elementHandleClick],
+      ],
+      distribution1DayTooltip: [
+        ['display', 3, elementHandleClick],
+        ['interval', 0, elementHandleClick],
+        [
+          'highchartsSeriesGFirstChild',
+          value => value,
+          findByNameShowTooltip,
+          {
+            loop: true,
+            getSelector: name => `.highcharts-name-${name}`,
+            exit: true,
+            func: elementHandleClick,
+          },
+        ],
       ],
       distribution7Days: [
         ['display', 3, elementHandleClick],
         ['interval', 1, elementHandleClick],
       ],
+      distribution7DaysTooltip: [
+        ['display', 3, elementHandleClick],
+        ['interval', 1, elementHandleClick],
+        [
+          'highchartsSeriesGFirstChild',
+          value => value,
+          findByNameShowTooltip,
+          {
+            loop: true,
+            getSelector: name => `.highcharts-name-${name}`,
+            exit: true,
+            func: elementHandleClick,
+          },
+        ],
+      ],
       populationShare1Day: [
         ['display', 2, elementHandleClick],
         ['interval', 0, elementHandleClick],
+      ],
+      populationShare1DayTooltip: [
+        ['display', 2, elementHandleClick],
+        ['interval', 0, elementHandleClick],
+        [
+          'highchartsSeriesGFirstChild',
+          value => value,
+          findByNameShowTooltip,
+          {
+            loop: true,
+            getSelector: name => `.highcharts-name-${name}`,
+            exit: true,
+            func: elementHandleClick,
+          },
+        ],
       ],
       populationShare7Days: [
         ['display', 2, elementHandleClick],
@@ -214,7 +303,6 @@ CHART = {
           findByNameShowTooltip,
           {
             loop: true,
-            length: 60,
             getSelector: name => `.highcharts-name-${name}`,
             exit: true,
             func: elementHandleClick,
