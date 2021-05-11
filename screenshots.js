@@ -166,9 +166,25 @@ CHART = {
         ['display', 1, elementHandleClick],
         ['interval', 0, elementHandleClick],
       ],
+      absolute7Days: [
+        ['display', 1, elementHandleClick],
+        ['interval', 1, elementHandleClick],
+      ],
       distribution1Day: [
         ['display', 3, elementHandleClick],
         ['interval', 0, elementHandleClick],
+      ],
+      distribution7Days: [
+        ['display', 3, elementHandleClick],
+        ['interval', 1, elementHandleClick],
+      ],
+      populationShare1Day: [
+        ['display', 2, elementHandleClick],
+        ['interval', 0, elementHandleClick],
+      ],
+      populationShare7Days: [
+        ['display', 2, elementHandleClick],
+        ['interval', 1, elementHandleClick],
       ],
     },
   },
@@ -380,6 +396,9 @@ OPTIONS = {
       ),
       highchartsSeries: await element.$$(
         '.highcharts-root > g.highcharts-series-group g.highcharts-series'
+      ),
+      highchartsSeriesGFirstChild: await element.$$(
+        '.highcharts-root > g.highcharts-series-group g.highcharts-series g:first-child'
       ),
       highchartsSeriesColumn: await element.$$(
         '.highcharts-root > g.highcharts-series-group .highcharts-column-series'
