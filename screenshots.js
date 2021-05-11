@@ -13,6 +13,25 @@ const elementHandleSelect = async (elementHandle, value) => {
 
 const castToNumber = index => +index;
 
+const findByNameShowTooltip = async (series, name, options) => {
+  if (!series) {
+    throw new Error(`Argument [series] is: ${series}!`);
+  }
+
+  if (series.length === 0) {
+    throw Error(`Argument [series] is empty Array!`);
+  }
+
+  const selector = options.getSelector(name);
+  const button = await series[0].$(selector);
+  if (button) {
+    button.click();
+    return button;
+  }
+
+  throw new Error(`Element with selector: ${selector} doesn't exist!`);
+};
+
 const loopAndShowTooltip = async (series, index, options) => {
   const selectorsArray = await Promise.all(
     series.map(async item => await item.$$(options.selector))
@@ -185,6 +204,22 @@ CHART = {
       populationShare7Days: [
         ['display', 2, elementHandleClick],
         ['interval', 1, elementHandleClick],
+      ],
+      populationShare7DaysTooltip: [
+        ['display', 2, elementHandleClick],
+        ['interval', 1, elementHandleClick],
+        [
+          'highchartsSeriesGFirstChild',
+          value => value,
+          findByNameShowTooltip,
+          {
+            loop: true,
+            length: 60,
+            getSelector: name => `.highcharts-name-${name}`,
+            exit: true,
+            func: elementHandleClick,
+          },
+        ],
       ],
     },
   },
@@ -396,6 +431,9 @@ OPTIONS = {
       ),
       highchartsSeries: await element.$$(
         '.highcharts-root > g.highcharts-series-group g.highcharts-series'
+      ),
+      highchartsSeriesGFirstChildPath: await element.$$(
+        '.highcharts-root > g.highcharts-series-group g.highcharts-series g:first-child path'
       ),
       highchartsSeriesGFirstChild: await element.$$(
         '.highcharts-root > g.highcharts-series-group g.highcharts-series g:first-child'
