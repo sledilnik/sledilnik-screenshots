@@ -309,6 +309,118 @@ CHART = {
           },
         ],
       ],
+      vaccinated1stPopulationShare: [
+        [
+          'filterSelect',
+          0,
+          elementHandleSelect,
+          { funcArgs: ['Vaccinated1st'] },
+        ],
+      ],
+      vaccinated1stAbsolute: [
+        [
+          'filterSelect',
+          0,
+          elementHandleSelect,
+          { funcArgs: ['Vaccinated1st'] },
+        ],
+        ['display', 0, elementHandleClick],
+      ],
+      vaccinated1stPopulationShareTooltip: [
+        [
+          'filterSelect',
+          0,
+          elementHandleSelect,
+          { funcArgs: ['Vaccinated1st'] },
+        ],
+        [
+          'highchartsSeriesGFirstChild',
+          value => value,
+          findByNameShowTooltip,
+          {
+            loop: true,
+            getSelector: name => `.highcharts-name-${name}`,
+            exit: true,
+            func: elementHandleClick,
+          },
+        ],
+      ],
+      vaccinated1stAbsoluteTooltip: [
+        [
+          'filterSelect',
+          0,
+          elementHandleSelect,
+          { funcArgs: ['Vaccinated1st'] },
+        ],
+        ['display', 0, elementHandleClick],
+        [
+          'highchartsSeriesGFirstChild',
+          value => value,
+          findByNameShowTooltip,
+          {
+            loop: true,
+            getSelector: name => `.highcharts-name-${name}`,
+            exit: true,
+            func: elementHandleClick,
+          },
+        ],
+      ],
+      vaccinated2ndPopulationShare: [
+        [
+          'filterSelect',
+          0,
+          elementHandleSelect,
+          { funcArgs: ['Vaccinated2nd'] },
+        ],
+      ],
+      vaccinated2ndAbsolute: [
+        [
+          'filterSelect',
+          0,
+          elementHandleSelect,
+          { funcArgs: ['Vaccinated2nd'] },
+        ],
+        ['display', 0, elementHandleClick],
+      ],
+      vaccinated2ndPopulationShareTooltip: [
+        [
+          'filterSelect',
+          0,
+          elementHandleSelect,
+          { funcArgs: ['Vaccinated2nd'] },
+        ],
+        [
+          'highchartsSeriesGFirstChild',
+          value => value,
+          findByNameShowTooltip,
+          {
+            loop: true,
+            getSelector: name => `.highcharts-name-${name}`,
+            exit: true,
+            func: elementHandleClick,
+          },
+        ],
+      ],
+      vaccinated2ndAbsoluteTooltip: [
+        [
+          'filterSelect',
+          0,
+          elementHandleSelect,
+          { funcArgs: ['Vaccinated2nd'] },
+        ],
+        ['display', 0, elementHandleClick],
+        [
+          'highchartsSeriesGFirstChild',
+          value => value,
+          findByNameShowTooltip,
+          {
+            loop: true,
+            getSelector: name => `.highcharts-name-${name}`,
+            exit: true,
+            func: elementHandleClick,
+          },
+        ],
+      ],
     },
   },
   Municipalities: {
