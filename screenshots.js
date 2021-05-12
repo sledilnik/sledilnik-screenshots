@@ -25,7 +25,7 @@ const findByNameShowTooltip = async (series, name, options) => {
   const selector = options.getSelector(name);
   const button = await series[0].$(selector);
   if (button) {
-    button.click();
+    await button.click();
     return button;
   }
 
