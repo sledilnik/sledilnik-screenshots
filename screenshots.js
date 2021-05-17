@@ -81,9 +81,9 @@ CHART = {
     name: 'MetricsComparison',
     customChart: {
       casesConfirmedFourMonths: [
-        ['range', 1, elementHandleClick],
         ['metrics', 11, elementHandleClick],
         ['metrics', 1, elementHandleClick],
+        ['range', 1, elementHandleClick],
       ],
     },
   },

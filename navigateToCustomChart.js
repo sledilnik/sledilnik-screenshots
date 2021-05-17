@@ -15,11 +15,6 @@ module.exports = async ({
     );
   }
 
-  const buttons = await getButtons(element);
-  // for (let [key, value] of Object.entries(buttons)) {
-  //   console.log(key, value.length);
-  // }
-
   const evaluteFunc = el => {
     if (el.textContent) {
       return el.textContent;
@@ -29,6 +24,7 @@ module.exports = async ({
 
   let returnedElement;
   for (item of stepsToReproduce) {
+    const buttons = await getButtons(element);
     const [what, which, func, options] = item;
 
     const performOnElement = async () => {
