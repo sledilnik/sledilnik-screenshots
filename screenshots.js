@@ -80,7 +80,7 @@ CHART = {
   MetricsComparison: {
     name: 'MetricsComparison',
     customChart: {
-      casesConfirmedFourMonths: [
+      casesConfirmed7DaysAvgFourMonths: [
         ['metrics', 11, elementHandleClick],
         ['metrics', 1, elementHandleClick],
         ['range', 1, elementHandleClick],
