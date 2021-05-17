@@ -79,29 +79,42 @@ const filterSelectValue = value => [
 CHART = {
   MetricsComparison: {
     name: 'MetricsComparison',
+    customChart: {
+      casesConfirmedFourMonths: [
+        ['range', 1, elementHandleClick],
+        ['metrics', 11, elementHandleClick],
+        ['metrics', 1, elementHandleClick],
+      ],
+    },
   },
   DailyComparison: {
     name: 'DailyComparison',
     customChart: {
+      casesConfirmed: [],
       casesConfirmedTooltip: [
         ['highchartsSeriesRect', castToNumber, elementHandleClick],
       ],
+      casesActive: [['metrics', 1, elementHandleClick]],
       casesActiveTooltip: [
         ['metrics', 1, elementHandleClick],
         ['highchartsSeriesRect', castToNumber, elementHandleClick],
       ],
+      performedPCR: [['metrics', 2, elementHandleClick]],
       performedPCRTooltip: [
         ['metrics', 2, elementHandleClick],
         ['highchartsSeriesRect', castToNumber, elementHandleClick],
       ],
+      sharePCR: [['metrics', 3, elementHandleClick]],
       sharePCRTooltip: [
         ['metrics', 3, elementHandleClick],
         ['highchartsSeriesRect', castToNumber, elementHandleClick],
       ],
+      testsHAT: [['metrics', 4, elementHandleClick]],
       testsHATTooltip: [
         ['metrics', 4, elementHandleClick],
         ['highchartsSeriesRect', castToNumber, elementHandleClick],
       ],
+      vaccinesUsed: [['metrics', 5, elementHandleClick]],
       vaccinesUsedTooltip: [
         ['metrics', 5, elementHandleClick],
         ['highchartsSeriesRect', castToNumber, elementHandleClick],
@@ -293,6 +306,9 @@ CHART = {
   },
   Schools: {
     name: 'Schools',
+    customChart: {
+      activeAbsolutePupilsFourMonths: [['range', 1, elementHandleClick]],
+    },
   },
   SchoolStatus: {
     name: 'SchoolStatus',
@@ -319,6 +335,11 @@ CHART = {
   AgeGroupsTimeline: {
     name: 'AgeGroupsTimeline',
     customChart: {
+      newCasesFourMonths: [['range', 1, elementHandleClick]],
+      newCasesRelativeFourMonths: [
+        ['range', 1, elementHandleClick],
+        ['metrics', 1, elementHandleClick],
+      ],
       twoMonthsNewCasesTooltip: [
         [
           'highchartsSeries',
@@ -443,6 +464,7 @@ OPTIONS = {
       display: await element.$$(
         '.chart-display-property-selector > .chart-display-property-selector__item'
       ),
+      range: await element.$$('.highcharts-range-selector-buttons rect'),
       highchartsSeries0Rect: await element.$$(
         '.highcharts-root > g.highcharts-series-group > .highcharts-series-0 > rect'
       ),
