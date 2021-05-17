@@ -450,7 +450,7 @@ OPTIONS = {
     viewport: { width: 1200, height: 800 },
     getSelector: () => '.visualization.container.embeded > section',
     getUrl: type => `${CHART_BASE_URL}${type}`,
-    selectorsToRemove: ['.metrics-selectors'],
+    selectorsToRemove: ['.metrics-selectors', 'div.show-all'],
     getButtons: async element => ({
       filterSelect: await element.$$(
         '.chart-display-properties > .filters > select'
