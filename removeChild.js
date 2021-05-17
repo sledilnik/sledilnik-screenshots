@@ -5,7 +5,7 @@ module.exports = async (page, selectorToRemove) => {
 
     if (lengthBefore === 0) {
       console.warn(`Found no element with selector: ${selectorToRemove}`);
-      return;
+      return [null, { [selectorToRemove]: null }];
     }
 
     console.log(
@@ -31,6 +31,7 @@ module.exports = async (page, selectorToRemove) => {
     console.log(
       `${lengthAfter} element(s) with selector: ${selectorToRemove} on page.`
     );
+    return [null, { [selectorToRemove]: { lengthBefore, lengthAfter } }];
   } catch (error) {
     return error;
   }

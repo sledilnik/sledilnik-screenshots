@@ -16,13 +16,25 @@ module.exports = async ({
 
   for (let cardName of selectorsToRemove) {
     const _selectorToRemove = screenshot.getSelector(cardName);
-    const error = await removeChild(page, _selectorToRemove);
+    const [error, removedSelector] = await removeChild(page, _selectorToRemove);
     if (error instanceof Error) {
       console.log('Has ERROR');
       return callback(undefined, error.message);
     }
-    console.log(`Elements with selector: ${_selectorToRemove} removed`);
+
+    const [key, value] = Object.entries(removedSelector)[0];
+
+    value === null &&
+      console.log(`Could not remove elements with selector: ${key}!`);
+
+    value !== null &&
+      console.log(
+        `${
+          value.lengthBefore - value.lengthAfter
+        } element(s) with selector: ${key} removed!`
+      );
   }
+
   await page.evaluate(sel => {
     const el = document.querySelector(sel);
     el.style['margin'] = '0 0 0 0';

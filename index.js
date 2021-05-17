@@ -37,12 +37,8 @@ module.exports.handler = async (event, context, callback) => {
     return callback(undefined, error.message);
   }
 
-  const {
-    viewport,
-    getSelector,
-    getUrl,
-    selectorsToRemove,
-  } = screenshots.OPTIONS[type];
+  const { viewport, getSelector, getUrl, selectorsToRemove } =
+    screenshots.OPTIONS[type];
   const possibleScreenshots = screenshots.SCREENSHOTS[type];
   const screenshot = possibleScreenshots[chosenScreenshot];
 
@@ -108,14 +104,27 @@ module.exports.handler = async (event, context, callback) => {
 
     if (hideLegend == String(true)) {
       console.log('Legend will be removed!');
+      const removedSelectors = [];
       for (const selectorToRemove of selectorsToRemove) {
-        const error = await removeChild(page, selectorToRemove);
+        const [error, result] = await removeChild(page, selectorToRemove);
         if (error instanceof Error) {
           console.log('Has ERROR');
           return callback(undefined, error.message);
         }
+        removedSelectors.push(result);
       }
-      console.log('Legend removed!');
+      for (const selector of removedSelectors) {
+        for (item of Object.entries(selector)) {
+          const [key, value] = item;
+          value === null && console.log(`No element for selector: ${key}`);
+          if (value !== null) {
+            console.log(
+              `Selector: ${key}. Length before: ${value.lengthBefore}, length after: ${value.lengthAfter}`
+            );
+          }
+        }
+      }
+      console.log('Legend removing is done!');
     }
 
     await page.waitForTimeout(500);
