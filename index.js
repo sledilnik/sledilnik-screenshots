@@ -127,7 +127,7 @@ module.exports.handler = async (event, context, callback) => {
       console.log('Legend removing is done!');
     }
 
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(1500);
     image = await element.screenshot({ type: 'png', encoding: 'base64' });
     console.log('Made screenshot');
 
