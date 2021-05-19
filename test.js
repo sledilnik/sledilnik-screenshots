@@ -58,11 +58,11 @@ const runTest = (
 // custom -> see CHART[name].customChart
 
 const query = {
-  type: 'multi',
-  screen: 'Municipalities',
-  custom: 'obalnoKraskaSortByLast',
+  type: 'chart',
+  screen: 'Map',
+  custom: 'distribution1Day',
   hoverIndex: '',
-  hideLegend: false,
+  hideLegend: 'false',
 };
 
 const dateTime = new Date();

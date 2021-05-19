@@ -195,8 +195,8 @@ CHART = {
         mapMunicipalitiesTooltip,
       ],
       distribution1Day: [
-        ['display', 3, elementHandleClick],
         ['interval', 0, elementHandleClick],
+        ['display', 3, elementHandleClick],
       ],
       distribution1DayTooltip: [
         ['display', 3, elementHandleClick],
