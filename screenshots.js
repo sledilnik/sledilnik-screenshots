@@ -3,12 +3,56 @@ const path = require('path');
 CHART_BASE_URL = 'https://covid-19.sledilnik.org/embed.html#/chart/';
 CARD_BASE_URL = 'https://covid-19.sledilnik.org/';
 
+const WaitBeforeScreenshot = {
+  default: 500,
+  Map_distribution1Day: 1500,
+  Map_distribution1DayTooltip: 1500,
+  Map_distribution7Days: 1500,
+  Map_distribution7DaysTooltip: 1500,
+};
+
+const getDaysDifference = (dateFrom, dateTo) => {
+  const df = dateFrom.split('.').map(item => +item);
+  const dt = dateTo.split('.').map(item => +item);
+
+  const date1 = new Date(Date.UTC(df[2], df[1] - 1, df[0]));
+  const date2 = new Date(Date.UTC(dt[2], dt[1] - 1, dt[0]));
+
+  const timeDifference = date2.getTime() - date1.getTime();
+
+  const daysDifference = Math.round(timeDifference / (1000 * 3600 * 24));
+  return daysDifference;
+};
+
 const elementHandleClick = async elementHandle => {
   await elementHandle.click();
+  console.log('Clicked!');
+  return elementHandle;
+};
+
+const elementHandleHover = async elementHandle => {
+  await elementHandle.hover();
+  console.log('Hovered!');
+  return elementHandle;
 };
 
 const elementHandleSelect = async (elementHandle, value) => {
   await elementHandle.select(value);
+  console.log('Select value set!');
+  return elementHandle;
+};
+
+const elementHandleSetValue = async (elementHandle, value, page) => {
+  await elementHandle.click();
+  await page.keyboard.down('Control');
+  await page.keyboard.press('A');
+  await page.keyboard.up('Control');
+  await page.keyboard.press('Backspace');
+  await elementHandle.click();
+  await elementHandle.type(value, { delay: 100 });
+  await page.keyboard.press('Tab');
+  console.log('Value typed!');
+  return elementHandle;
 };
 
 const castToNumber = index => +index;
@@ -32,11 +76,13 @@ const findByNameShowTooltip = async (series, name, options) => {
   throw new Error(`Element with selector: ${selector} doesn't exist!`);
 };
 
-const loopAndShowTooltip = async (series, index, options) => {
+const loopAndShowTooltip = async (series, index, options, page) => {
   const selectorsArray = await Promise.all(
     series.map(async item => await item.$$(options.selector))
   );
-  const filtered = selectorsArray.filter(item => item.length > options.length);
+  const filtered = selectorsArray.filter(item => {
+    return item.length >= options.length(options.dateFrom, options.dateTo);
+  });
 
   if (filtered.length === 0) {
     throw new Error(
@@ -49,12 +95,47 @@ const loopAndShowTooltip = async (series, index, options) => {
   const buttons = filtered[0];
   if (buttons.length - 1 < index) {
     throw new Error(
-      `Can not find index; array length: ${buttons.length}, [index]: ${index}`
+      `Index ${index} is out of range! Max index: ${buttons.length - 1}`
     );
   }
 
-  await elementHandleClick(buttons[index]);
-  return buttons[index];
+  const sortByAttributeX = async (elementHandlesSeries, index) => {
+    const elementHandlesSeriesWithXAttr = await Promise.all(
+      elementHandlesSeries.map(async item => {
+        x = await page.evaluate(el => el.getAttribute('x'), item);
+        return [item, x];
+      })
+    );
+    elementHandlesSeriesWithXAttr.sort((a, b) => a[1] - b[1]);
+    return elementHandlesSeriesWithXAttr[index][0];
+  };
+
+  const button = options.sort
+    ? await sortByAttributeX(buttons, index)
+    : buttons[index];
+
+  const func = options.func ?? elementHandleClick;
+
+  // in some cases not working
+  // await func(button);
+  /**
+   * in some cases not working, mostly attemptimp to click last item.
+   *
+   *
+   * const query = {
+   *   type: 'chart',
+   *   screen: 'Cases',
+   *   custom: 'cases_DateRange_Active_Hospitalized_Deceased_Tooltip',
+   *   hoverIndex: '118',
+   *   hideLegend: 'false',
+   *   dateFrom: '01. 01. 2021',
+   *   dateTo: '30. 04. 2021',
+   * };
+   */
+
+  func.name = 'elementHandleHover' && (await button.hover());
+  func.name = 'elementHandleClick' && (await button.click());
+  return [button, buttons];
 };
 
 const mapMunicipalitiesTooltip = [
@@ -347,7 +428,7 @@ CHART = {
           loopAndShowTooltip,
           {
             loop: true,
-            length: 60,
+            length: () => 60, // todo calc because of february && july, august
             selector: 'rect',
             exit: true,
             func: elementHandleClick,
@@ -385,6 +466,45 @@ CHART = {
   },
   Cases: {
     name: 'Cases',
+    customChart: {
+      cases_TwoMonths_Active_Hospitalized_Deceased: [
+        ['highchartsLegendItemRect', 2, elementHandleClick],
+        ['highchartsLegendItemRect', 3, elementHandleClick],
+        ['highchartsLegendItemRect', 4, elementHandleClick],
+        ['highchartsLegendItemRect', 6, elementHandleClick],
+        ['highchartsLegendItemRect', 7, elementHandleClick],
+      ],
+      cases_TwoMonths_Active_Hospitalized_Deceased_Tooltip: [
+        ['highchartsLegendItemRect', 2, elementHandleClick],
+        ['highchartsLegendItemRect', 3, elementHandleClick],
+        ['highchartsLegendItemRect', 4, elementHandleClick],
+        ['highchartsLegendItemRect', 6, elementHandleClick],
+        ['highchartsLegendItemRect', 7, elementHandleClick],
+        ['highchartsSeriesRect', castToNumber, elementHandleClick],
+      ],
+      cases_DateRange_Active_Hospitalized_Deceased_Tooltip: [
+        ['rangeDateInput', 0, elementHandleSetValue, { type: 'dateFrom' }],
+        ['rangeDateInput', 1, elementHandleSetValue, { type: 'dateTo' }],
+        ['highchartsLegendItemRect', 2, elementHandleClick],
+        ['highchartsLegendItemRect', 3, elementHandleClick],
+        ['highchartsLegendItemRect', 4, elementHandleClick],
+        ['highchartsLegendItemRect', 6, elementHandleClick],
+        ['highchartsLegendItemRect', 7, elementHandleClick],
+        [
+          'highchartsSeries',
+          castToNumber,
+          loopAndShowTooltip,
+          {
+            loop: true,
+            length: getDaysDifference,
+            selector: 'rect',
+            exit: true,
+            func: elementHandleHover,
+            sort: true,
+          },
+        ],
+      ],
+    },
   },
   RegionMap: {
     name: 'RegionMap',
@@ -487,6 +607,12 @@ OPTIONS = {
       highchartsSeriesColumn: await element.$$(
         '.highcharts-root > g.highcharts-series-group .highcharts-column-series'
       ),
+      highchartsLegendItemRect: await element.$$(
+        '.highcharts-legend .highcharts-legend-item rect'
+      ),
+      rangeDateInput: await element.$$(
+        '.highcharts-range-input > text > tspan'
+      ),
     }),
   },
   MULTICARD: {
@@ -497,4 +623,8 @@ OPTIONS = {
   },
 };
 
-module.exports = { OPTIONS, SCREENSHOTS: { CARD, CHART, MULTICARD } };
+module.exports = {
+  OPTIONS,
+  SCREENSHOTS: { CARD, CHART, MULTICARD },
+  WaitBeforeScreenshot,
+};

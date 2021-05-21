@@ -6,6 +6,8 @@ const removeChild = require('./removeChild');
 const validateQueryStringParameters = require('./validateQueryStringParameters');
 const removeUnwantedCards = require('./removeUnwantedCards.js');
 
+const { WaitBeforeScreenshot } = screenshots;
+
 module.exports.handler = async (event, context, callback) => {
   if (!event.queryStringParameters) {
     return callback(undefined, 'No target');
@@ -17,12 +19,16 @@ module.exports.handler = async (event, context, callback) => {
     custom: customChartName,
     hoverIndex,
     hideLegend,
+    dateFrom,
+    dateTo,
   } = event?.queryStringParameters || {
     type: '',
     screen: '',
     custom: '',
     hoverIndex: '',
     hideLegend: '',
+    dateFrom: '',
+    dateTo: '',
   };
   const type = _type.toUpperCase();
 
@@ -95,6 +101,8 @@ module.exports.handler = async (event, context, callback) => {
         chosenScreenshot,
         customChartName,
         hoverIndex,
+        dateFrom,
+        dateTo,
       });
       if (error instanceof Error) {
         console.log('Has ERROR');
@@ -127,6 +135,9 @@ module.exports.handler = async (event, context, callback) => {
       console.log('Legend removing is done!');
     }
 
+    const timeout =
+      WaitBeforeScreenshot[`${chosenScreenshot}_${customChartName}`] ??
+      WaitBeforeScreenshot.default;
     await page.waitForTimeout(1500);
     image = await element.screenshot({ type: 'png', encoding: 'base64' });
     console.log('Made screenshot');

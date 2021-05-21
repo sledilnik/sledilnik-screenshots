@@ -9,7 +9,8 @@ const runTest = (
     headless: true,
   }
 ) => {
-  const { type, screen, custom, hoverIndex, hideLegend } = query;
+  const { type, screen, custom, hoverIndex, hideLegend, dateFrom, dateTo } =
+    query;
 
   const event = {
     queryStringParameters: {
@@ -18,6 +19,8 @@ const runTest = (
       custom,
       hoverIndex,
       hideLegend,
+      dateFrom,
+      dateTo,
     },
     headless: options.headless,
   };
@@ -59,10 +62,12 @@ const runTest = (
 
 const query = {
   type: 'chart',
-  screen: 'Map',
-  custom: 'distribution1Day',
-  hoverIndex: '',
+  screen: 'Cases',
+  custom: 'cases_DateRange_Active_Hospitalized_Deceased_Tooltip',
+  hoverIndex: '118',
   hideLegend: 'false',
+  dateFrom: '01. 01. 2021',
+  dateTo: '30. 04. 2021',
 };
 
 const dateTime = new Date();
