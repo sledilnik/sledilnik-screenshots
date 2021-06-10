@@ -50,13 +50,14 @@ const elementHandleSetValue = async (elementHandle, value, page) => {
   await page.keyboard.press('Backspace');
   await elementHandle.click();
   await elementHandle.type(value, { delay: 100 });
+  console.log(`Element type value: ${value}`);
   await page.keyboard.press('Tab');
-  console.log('Value typed!');
   return elementHandle;
 };
 
 const castToNumber = index => +index;
 
+// {type: 'loop'}
 const findByNameShowTooltip = async (series, name, options) => {
   if (!series) {
     throw new Error(`Argument [series] is: ${series}!`);
@@ -116,25 +117,8 @@ const loopAndShowTooltip = async (series, index, options, page) => {
 
   const func = options.func ?? elementHandleClick;
 
-  // in some cases not working
-  // await func(button);
-  /**
-   * in some cases not working, mostly attemptimp to click last item.
-   *
-   *
-   * const query = {
-   *   type: 'chart',
-   *   screen: 'Cases',
-   *   custom: 'cases_DateRange_Active_Hospitalized_Deceased_Tooltip',
-   *   hoverIndex: '118',
-   *   hideLegend: 'false',
-   *   dateFrom: '01. 01. 2021',
-   *   dateTo: '30. 04. 2021',
-   * };
-   */
-
-  func.name = 'elementHandleHover' && (await button.hover());
-  func.name = 'elementHandleClick' && (await button.click());
+  func.name === 'elementHandleHover' && (await button.hover());
+  func.name === 'elementHandleClick' && (await button.click());
   return [button, buttons];
 };
 
@@ -143,10 +127,10 @@ const mapMunicipalitiesTooltip = [
   value => value,
   findByNameShowTooltip,
   {
-    loop: true,
     getSelector: name => `.highcharts-name-${name}`,
     exit: true,
     func: elementHandleClick,
+    type: 'loop',
   },
 ];
 
@@ -157,6 +141,40 @@ const filterSelectValue = value => [
   { funcArgs: [value] },
 ];
 
+const lineChartTooltip = async (index, options, page) => {
+  const convertedIndex = isNaN(index) ? null : index;
+  console.log(
+    `Try to show line chart tooltip with index: ${convertedIndex} on series with index: ${options?.seriesIndex}`
+  );
+  const data = await page.evaluate(
+    (index, options) => {
+      const { charts } = Highcharts;
+      const { series } = charts[options.chartsIndex ?? 0];
+      const { points } = series[options.seriesIndex ?? 0];
+      const i = index ?? points.length - 1;
+      const point = points[i];
+      point.onMouseOver();
+
+      const result = {
+        button: point.key,
+        c: charts.length,
+        s: series.length,
+        p: points.length,
+        i,
+      };
+
+      return Promise.resolve(result);
+    },
+    convertedIndex,
+    options
+  );
+  console.log(`Charts length: ${data.c}`);
+  console.log(`Series length: ${data.s}`);
+  console.log(`Points length: ${data.p}`);
+  console.log(`Tooltip for point with index: ${data.i}`);
+  return data.button;
+};
+
 CHART = {
   MetricsComparison: {
     name: 'MetricsComparison',
@@ -165,6 +183,21 @@ CHART = {
         ['metrics', 11, elementHandleClick],
         ['metrics', 1, elementHandleClick],
         ['range', 1, elementHandleClick],
+      ],
+      casesConfirmed7DaysAvgFourMonthsTooltip: [
+        ['metrics', 11, elementHandleClick],
+        ['metrics', 1, elementHandleClick],
+        ['range', 1, elementHandleClick],
+        [
+          null,
+          castToNumber,
+          lineChartTooltip,
+          {
+            type: 'line',
+            chartsIndex: 0,
+            seriesIndex: 0,
+          },
+        ],
       ],
     },
   },
@@ -427,11 +460,11 @@ CHART = {
           castToNumber,
           loopAndShowTooltip,
           {
-            loop: true,
             length: () => 60, // todo calc because of february && july, august
             selector: 'rect',
             exit: true,
             func: elementHandleClick,
+            type: 'loop',
           },
         ],
       ],
@@ -483,8 +516,8 @@ CHART = {
         ['highchartsSeriesRect', castToNumber, elementHandleClick],
       ],
       cases_DateRange_Active_Hospitalized_Deceased_Tooltip: [
-        ['rangeDateInput', 0, elementHandleSetValue, { type: 'dateFrom' }],
-        ['rangeDateInput', 1, elementHandleSetValue, { type: 'dateTo' }],
+        ['rangeDateInput', 0, elementHandleSetValue, { value: 'dateFrom' }],
+        ['rangeDateInput', 1, elementHandleSetValue, { value: 'dateTo' }],
         ['highchartsLegendItemRect', 2, elementHandleClick],
         ['highchartsLegendItemRect', 3, elementHandleClick],
         ['highchartsLegendItemRect', 4, elementHandleClick],
@@ -495,11 +528,11 @@ CHART = {
           castToNumber,
           loopAndShowTooltip,
           {
-            loop: true,
             length: getDaysDifference,
             selector: 'rect',
             exit: true,
             func: elementHandleHover,
+            type: 'loop',
             sort: true,
           },
         ],
@@ -613,6 +646,7 @@ OPTIONS = {
       rangeDateInput: await element.$$(
         '.highcharts-range-input > text > tspan'
       ),
+      root: await element.$$('.highcharts-root'),
     }),
   },
   MULTICARD: {

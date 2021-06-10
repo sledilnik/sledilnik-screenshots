@@ -48,13 +48,16 @@ module.exports = async ({
 
       let result;
 
+      // if arguments values are known
       const funcArgs = options?.funcArgs || [];
-      if (button && !options?.type) {
+      if (button && !options?.value) {
         result = await func(button, ...funcArgs);
       }
-      if (button && options?.type) {
+
+      // if arguments values are dynamic, at the moment only for date range
+      if (button && options?.value) {
         type = { dateFrom, dateTo };
-        const value = type[options.type];
+        const value = type[options.value];
         result = await func(button, value, page);
       }
 
@@ -97,7 +100,22 @@ module.exports = async ({
       return button;
     };
 
-    !options?.loop && (returnedElement = await performOnElement());
-    options?.loop && (returnedElement = await preformOnArrayOfElements());
+    const preformOnLineChart = async () => {
+      const index = which instanceof Function ? which(hoverIndex) : which;
+      const button = await func(index, options, page);
+      console.log(`Button [${button}] clicked!`);
+    };
+
+    const FuncDict = {
+      default: performOnElement,
+      loop: preformOnArrayOfElements,
+      line: preformOnLineChart,
+    };
+
+    const performFunc = options.type
+      ? FuncDict[options.type]
+      : FuncDict.default;
+
+    returnedElement = await performFunc();
   }
 };
