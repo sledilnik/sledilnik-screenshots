@@ -2,6 +2,7 @@ const path = require('path');
 
 CHART_BASE_URL = 'https://covid-19.sledilnik.org/embed.html#/chart/';
 CARD_BASE_URL = 'https://covid-19.sledilnik.org/';
+// CARD_BASE_STAGE_URL = 'https://stage.sledilnik.org/';
 
 const WaitBeforeScreenshot = {
   default: 500,
@@ -567,6 +568,7 @@ CARD = {
   testsToday: { name: 'testsToday' },
   testsTodayHAT: { name: 'testsTodayHAT' },
   casesActive: { name: 'casesActive' },
+  casesActive100k: { name: 'casesActive100k' },
   casesAvg7Days: { name: 'casesAvg7Days' },
   hospitalizedCurrent: { name: 'hospitalizedCurrent' },
   icuCurrent: { name: 'icuCurrent' },
@@ -578,7 +580,12 @@ MULTICARD = {
   LAB: {
     name: 'LAB',
     getSelector: type => `.cardtype-${type}`,
-    include: [CARD.testsToday, CARD.testsTodayHAT, CARD.casesActive],
+    include: [
+      CARD.testsToday,
+      CARD.testsTodayHAT,
+      CARD.casesAvg7Days,
+      CARD.casesActive100k,
+    ],
   },
   HOS: {
     name: 'HOS',

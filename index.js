@@ -75,6 +75,7 @@ module.exports.handler = async (event, context, callback) => {
 
     const element = await page.$(selector);
     if (!element) {
+      console.log(`No element with selector: ${selector}`);
       return callback(undefined, "Wrong selector or it's not visible");
     }
 
