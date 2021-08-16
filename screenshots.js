@@ -453,7 +453,7 @@ CHART = {
       newCasesFourMonths: [['range', 1, elementHandleClick]],
       newCasesRelativeFourMonths: [
         ['range', 1, elementHandleClick],
-        ['metrics', 1, elementHandleClick],
+        ['property_selector', 4, elementHandleClick],
       ],
       twoMonthsNewCasesTooltip: [
         [
@@ -654,6 +654,9 @@ OPTIONS = {
         '.highcharts-range-input > text > tspan'
       ),
       root: await element.$$('.highcharts-root'),
+      property_selector: await element.$$(
+        '.chart-display-property-selector > .chart-display-property-selector__item'
+      ),
     }),
   },
   MULTICARD: {
