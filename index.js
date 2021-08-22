@@ -21,6 +21,7 @@ module.exports.handler = async (event, context, callback) => {
     hideLegend,
     dateFrom,
     dateTo,
+    immediateDownload = 'true',
   } = event?.queryStringParameters || {
     type: '',
     screen: '',
@@ -29,6 +30,7 @@ module.exports.handler = async (event, context, callback) => {
     hideLegend: '',
     dateFrom: '',
     dateTo: '',
+    immediateDownload: '',
   };
   const type = _type.toUpperCase();
 
@@ -143,14 +145,33 @@ module.exports.handler = async (event, context, callback) => {
     image = await element.screenshot({ type: 'png', encoding: 'base64' });
     console.log('Made screenshot');
 
-    result = {
+    const filename = `${new Date().toISOString()}---${chosenScreenshot}.png`;
+    console.log('Filename is ', filename);
+
+    const download = {
+      statusCode: 200,
       headers: {
         'Content-Type': 'image/png',
+        'Content-Disposition': `attachment; filename="${filename}"`,
       },
-
-      body: image,
+      body: image.toString('base64'),
       isBase64Encoded: true,
     };
+
+    immediateDownload === String(true) &&
+      console.log('Immediate download request');
+
+    result =
+      immediateDownload === String(true)
+        ? download
+        : {
+            headers: {
+              'Content-Type': 'image/png',
+            },
+
+            body: image,
+            isBase64Encoded: true,
+          };
   } catch (error) {
     return callback(error);
   } finally {
