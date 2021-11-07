@@ -42,11 +42,27 @@ There are 3 types of screenshots:
 
    Custom chart is chart with user interaction. Could be hover over line chart, change date range, etc.
 
+4. CARD_EMBED
+
+   Base url: 'https://covid-19.sledilnik.org/embed.html#/card'
+   All embed cards paths:
+
+   - /confirmedCases
+   - /active
+   - /hospitalized
+   - /icu
+   - /deceased
+   - /testsToday
+   - /testsTodayHAT
+   - /casesAvg7Days
+   - /casesActive100k
+   - /vaccinationSummary
+
 ## Query params
 
 ### Mandatory params
 
-- `type`: "CARD" | "MULTICARD" | "CHART",
+- `type`: "CARD" | "MULTICARD" | "CHART" | "CARD_EMBED",
 - `screen`: appropriate [type] key e.g. for MULTICARD could be "LAB", "HOS" or "ALL".
 
 ```javascript
@@ -55,9 +71,17 @@ const queryParams = {
   type: 'card',
   screen: 'testsToday',
 };
+
+// CARD_EMBED
+const queryParams = {
+  type: 'card_embed',
+  screen: 'testsToday',
+};
 ```
 
 ### Optional params
+
+- `immediateDownload`: Boolean (default = false)
 
 Only for CHART!
 

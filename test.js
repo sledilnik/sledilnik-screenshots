@@ -60,14 +60,19 @@ const runTest = (
 // screen -> see screenshots.js CARD || CHART || MULTICARD properties
 // custom -> see CHART[name].customChart
 
+// const query = {
+//   type: 'chart',
+//   screen: 'Cases',
+//   custom: 'cases_DateRange_Active_Hospitalized_Deceased_Tooltip',
+//   hoverIndex: '118',
+//   hideLegend: 'false',
+//   dateFrom: '01. 01. 2021',
+//   dateTo: '30. 04. 2021',
+// };
+
 const query = {
-  type: 'chart',
-  screen: 'Cases',
-  custom: 'cases_DateRange_Active_Hospitalized_Deceased_Tooltip',
-  hoverIndex: '118',
-  hideLegend: 'false',
-  dateFrom: '01. 01. 2021',
-  dateTo: '30. 04. 2021',
+  type: 'card_embed',
+  screen: 'icuCurrent',
 };
 
 const dateTime = new Date();

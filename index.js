@@ -50,7 +50,8 @@ module.exports.handler = async (event, context, callback) => {
   const possibleScreenshots = screenshots.SCREENSHOTS[type];
   const screenshot = possibleScreenshots[chosenScreenshot];
 
-  const url = getUrl(screenshot.name);
+  const _url = screenshot?.path ?? screenshot.name;
+  const url = getUrl(_url);
   const selector = getSelector(screenshot.name);
 
   let result = null;

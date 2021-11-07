@@ -1,8 +1,9 @@
 const path = require('path');
 
-CHART_BASE_URL = 'https://covid-19.sledilnik.org/embed.html#/chart/';
-CARD_BASE_URL = 'https://covid-19.sledilnik.org/';
+const CHART_BASE_URL = 'https://covid-19.sledilnik.org/embed.html#/chart/';
+const CARD_BASE_URL = 'https://covid-19.sledilnik.org/';
 // CARD_BASE_STAGE_URL = 'https://stage.sledilnik.org/';
+const CARD_EMBED_BASE_URL = 'https://covid-19.sledilnik.org/embed.html#/card/';
 
 const WaitBeforeScreenshot = {
   default: 500,
@@ -599,6 +600,19 @@ MULTICARD = {
   },
 };
 
+CARD_EMBED = {
+  testsToday: { name: 'testsToday' },
+  testsTodayHAT: { name: 'testsTodayHAT' },
+  casesActive: { name: 'casesActive', path: 'active' },
+  casesActive100k: { name: 'casesActive100k' },
+  casesAvg7Days: { name: 'casesAvg7Days' },
+  hospitalizedCurrent: { name: 'hospitalizedCurrent', path: 'hospitalized' },
+  icuCurrent: { name: 'icuCurrent', path: 'icu' },
+  deceasedToDate: { name: 'deceasedToDate', path: 'deceased' },
+  vaccinationSummary: { name: 'vaccinationSummary' },
+  confirmedCases: { name: 'confirmedCases' },
+};
+
 OPTIONS = {
   CARD: {
     viewport: { width: 325, height: 800 },
@@ -665,10 +679,16 @@ OPTIONS = {
     getUrl: () => CARD_BASE_URL,
     selectorsToRemove: [],
   },
+  CARD_EMBED: {
+    viewport: { width: 325, height: 800 },
+    getSelector: type => `.cardtype-${type} > .hp-card`,
+    getUrl: type => `${CARD_EMBED_BASE_URL}${type}`,
+    selectorsToRemove: [],
+  },
 };
 
 module.exports = {
   OPTIONS,
-  SCREENSHOTS: { CARD, CHART, MULTICARD },
+  SCREENSHOTS: { CARD, CHART, MULTICARD, CARD_EMBED },
   WaitBeforeScreenshot,
 };
