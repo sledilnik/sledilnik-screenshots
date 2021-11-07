@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "ISC",
+  "scripts": {
+    "test": "node test.js"
+  },
   "dependencies": {
     "chrome-aws-lambda": "^10.0.0",
     "puppeteer-core": "^10.0.0"
