@@ -688,6 +688,9 @@ OPTIONS = {
       'div.float-nav-btn',
       'div.float-list',
       'div.overlay',
+      'div.🍔',
+      'div.social',
+      'div.email',
     ],
   },
   CARD_EMBED: {
