@@ -591,7 +591,12 @@ MULTICARD = {
   HOS: {
     name: 'HOS',
     getSelector: type => `.cardtype-${type}`,
-    include: [CARD.hospitalizedCurrent, CARD.icuCurrent, CARD.deceasedToDate],
+    include: [
+      CARD.vaccinationSummary,
+      CARD.hospitalizedCurrent,
+      CARD.icuCurrent,
+      CARD.deceasedToDate,
+    ],
   },
   ALL: {
     name: 'ALL_CARDS',
@@ -674,10 +679,16 @@ OPTIONS = {
     }),
   },
   MULTICARD: {
-    viewport: { width: 1000, height: 800 },
+    viewport: { width: 650, height: 2000 },
     getSelector: () => `.cards-wrapper`,
     getUrl: () => CARD_BASE_URL,
-    selectorsToRemove: [],
+    selectorsToRemove: [
+      'div.posts',
+      'div.row',
+      'div.float-nav-btn',
+      'div.float-list',
+      'div.overlay',
+    ],
   },
   CARD_EMBED: {
     viewport: { width: 325, height: 800 },

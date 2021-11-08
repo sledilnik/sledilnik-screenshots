@@ -5,6 +5,7 @@ const navigateToCustomChart = require('./navigateToCustomChart');
 const removeChild = require('./removeChild');
 const validateQueryStringParameters = require('./validateQueryStringParameters');
 const removeUnwantedCards = require('./removeUnwantedCards.js');
+const { setMulticardHeight } = require('./setMulticardHeight');
 
 const { WaitBeforeScreenshot } = screenshots;
 
@@ -95,6 +96,17 @@ module.exports.handler = async (event, context, callback) => {
         console.log('Has ERROR');
         return callback(undefined, error.message);
       }
+
+      /**
+       * calling setMulticardHeight() makes sense if elements with selectors are not present:
+       * 'div.posts',
+       * 'div.row',
+       * 'div.float-nav-btn',
+       * 'div.float-list',
+       * 'div.overlay'.
+       * See: ./screenshots.OPTIONS.MULTICARD.selectorsToRemove
+       */
+      setMulticardHeight(page, viewport);
     }
 
     if (customChartName) {
@@ -114,8 +126,11 @@ module.exports.handler = async (event, context, callback) => {
       }
     }
 
-    if (hideLegend == String(true)) {
-      console.log('Legend will be removed!');
+    const isChart = type === 'CHART';
+    const isChartAndHideLegend = hideLegend == String(true) && isChart;
+
+    if (isChartAndHideLegend || !isChart) {
+      console.log(`Selectors for type: ${type} will be removed!`);
       const removedSelectors = [];
       for (const selectorToRemove of selectorsToRemove) {
         const [error, result] = await removeChild(page, selectorToRemove);
@@ -136,14 +151,16 @@ module.exports.handler = async (event, context, callback) => {
           }
         }
       }
-      console.log('Legend removing is done!');
+      console.log(`Selectors for type: ${type} removed!`);
     }
 
-    const timeout =
-      WaitBeforeScreenshot[`${chosenScreenshot}_${customChartName}`] ??
-      WaitBeforeScreenshot.default;
     await page.waitForTimeout(1500);
-    image = await element.screenshot({ type: 'png', encoding: 'base64' });
+    let image;
+    image =
+      type === 'MULTICARD'
+        ? await page.screenshot({ type: 'png', encoding: 'base64' })
+        : await element.screenshot({ type: 'png', encoding: 'base64' });
+
     console.log('Made screenshot');
 
     const filename = `${new Date().toISOString()}---${chosenScreenshot}.png`;
