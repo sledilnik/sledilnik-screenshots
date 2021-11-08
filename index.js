@@ -106,7 +106,7 @@ module.exports.handler = async (event, context, callback) => {
        * 'div.overlay'.
        * See: ./screenshots.OPTIONS.MULTICARD.selectorsToRemove
        */
-      setMulticardHeight(page, viewport);
+      await setMulticardHeight(page, viewport);
     }
 
     if (customChartName) {
