@@ -72,6 +72,8 @@ module.exports.handler = async (event, context, callback) => {
     await page.setViewport(viewport);
     console.log('Set viewport');
 
+    await page.emulateTimezone('Europe/Ljubljana');
+
     await page.goto(url, { waitUntil: 'networkidle0' });
     console.log('Went to ', url);
 
