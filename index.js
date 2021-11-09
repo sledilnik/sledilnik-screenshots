@@ -7,8 +7,6 @@ const validateQueryStringParameters = require('./validateQueryStringParameters')
 const removeUnwantedCards = require('./removeUnwantedCards.js');
 const { setMulticardHeight } = require('./setMulticardHeight');
 
-const { WaitBeforeScreenshot } = screenshots;
-
 module.exports.handler = async (event, context, callback) => {
   if (!event.queryStringParameters) {
     return callback(undefined, 'No target');
