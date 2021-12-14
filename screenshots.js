@@ -435,6 +435,7 @@ CHART = {
       twoMonthsTooltip: [
         ['highchartsSeries0Rect', castToNumber, elementHandleClick],
       ],
+      byHospital: [['metrics', 0, elementHandleClick]],
     },
   },
   IcuPatients: {
